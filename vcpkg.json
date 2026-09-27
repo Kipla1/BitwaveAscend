@@ -1,0 +1,17 @@
+{
+  "name": "bitwave-ascend",
+  "version": "0.1.0",
+  "description": "University 2D game project (OOP) - Bitwave Ascend",
+  "builtin-baseline": "master",
+  "dependencies": [
+    "sfml",
+    "sqlite3",
+    "libsodium",
+    "nlohmann-json",
+    "spdlog",
+    {
+      "name": "catch2",
+      "features": []
+    }
+  ]
+}

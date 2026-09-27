@@ -1,0 +1,31 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 21, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "default",
+      "displayName": "Default (backend + shared only)",
+      "binaryDir": "${sourceDir}/build/default",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "BITWAVE_BUILD_FRONTEND": "OFF",
+        "BITWAVE_BUILD_TESTS": "OFF"
+      }
+    },
+    {
+      "name": "full",
+      "displayName": "Full (frontend + tests, requires vcpkg toolchain)",
+      "binaryDir": "${sourceDir}/build/full",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "BITWAVE_BUILD_FRONTEND": "ON",
+        "BITWAVE_BUILD_TESTS": "ON",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "default", "configurePreset": "default" },
+    { "name": "full", "configurePreset": "full" }
+  ]
+}
