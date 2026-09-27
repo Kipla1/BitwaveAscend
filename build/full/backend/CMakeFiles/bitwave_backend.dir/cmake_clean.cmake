@@ -1,0 +1,11 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/bitwave_backend.dir/src/common/Version.cpp.o"
+  "CMakeFiles/bitwave_backend.dir/src/common/Version.cpp.o.d"
+  "libbitwave_backend.a"
+  "libbitwave_backend.pdb"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/bitwave_backend.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

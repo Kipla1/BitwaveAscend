@@ -1,0 +1,11 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/Oscar/Documents/school/BitwaveAscend/build/full/cmake_install.cmake",
+		"/Users/Oscar/Documents/school/BitwaveAscend/build/full/shared/cmake_install.cmake",
+		"/Users/Oscar/Documents/school/BitwaveAscend/build/full/backend/cmake_install.cmake",
+		"/Users/Oscar/Documents/school/BitwaveAscend/build/full/frontend/cmake_install.cmake",
+		"/Users/Oscar/Documents/school/BitwaveAscend/build/full/tests/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

@@ -1,0 +1,5 @@
+if(EXISTS "/Users/Oscar/Documents/school/BitwaveAscend/build/full/tests/bitwave_tests-b12d07c_tests.cmake")
+  include("/Users/Oscar/Documents/school/BitwaveAscend/build/full/tests/bitwave_tests-b12d07c_tests.cmake")
+else()
+  add_test(bitwave_tests_NOT_BUILT-b12d07c bitwave_tests_NOT_BUILT-b12d07c)
+endif()
