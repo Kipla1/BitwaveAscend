@@ -1,0 +1,49 @@
+{
+	"abstract" : true,
+	"backtrace" : 2,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"_add_library",
+			"add_library"
+		],
+		"files" : 
+		[
+			"/Users/Oscar/Documents/school/vcpkg/scripts/buildsystems/vcpkg.cmake",
+			"shared/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 5,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 666,
+				"parent" : 1
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 10
+	},
+	"id" : "bitwave_shared::@b1f7512934231ee3f25d",
+	"name" : "bitwave_shared",
+	"paths" : 
+	{
+		"build" : "shared",
+		"source" : "shared"
+	},
+	"sources" : [],
+	"type" : "INTERFACE_LIBRARY"
+}

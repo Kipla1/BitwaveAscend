@@ -140,6 +140,30 @@ bitwave_backend/fast:
 	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/build
 .PHONY : bitwave_backend/fast
 
+src/auth/PasswordHasher.o: src/auth/PasswordHasher.cpp.o
+.PHONY : src/auth/PasswordHasher.o
+
+# target to build an object file
+src/auth/PasswordHasher.cpp.o:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/src/auth/PasswordHasher.cpp.o
+.PHONY : src/auth/PasswordHasher.cpp.o
+
+src/auth/PasswordHasher.i: src/auth/PasswordHasher.cpp.i
+.PHONY : src/auth/PasswordHasher.i
+
+# target to preprocess a source file
+src/auth/PasswordHasher.cpp.i:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/src/auth/PasswordHasher.cpp.i
+.PHONY : src/auth/PasswordHasher.cpp.i
+
+src/auth/PasswordHasher.s: src/auth/PasswordHasher.cpp.s
+.PHONY : src/auth/PasswordHasher.s
+
+# target to generate assembly for a file
+src/auth/PasswordHasher.cpp.s:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/src/auth/PasswordHasher.cpp.s
+.PHONY : src/auth/PasswordHasher.cpp.s
+
 src/common/Version.o: src/common/Version.cpp.o
 .PHONY : src/common/Version.o
 
@@ -174,6 +198,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... test"
 	@echo "... bitwave_backend"
+	@echo "... src/auth/PasswordHasher.o"
+	@echo "... src/auth/PasswordHasher.i"
+	@echo "... src/auth/PasswordHasher.s"
 	@echo "... src/common/Version.o"
 	@echo "... src/common/Version.i"
 	@echo "... src/common/Version.s"

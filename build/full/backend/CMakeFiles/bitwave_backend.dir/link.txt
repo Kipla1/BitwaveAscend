@@ -1,2 +1,2 @@
-/usr/bin/ar qc libbitwave_backend.a CMakeFiles/bitwave_backend.dir/src/common/Version.cpp.o
+/usr/bin/ar qc libbitwave_backend.a CMakeFiles/bitwave_backend.dir/src/common/Version.cpp.o CMakeFiles/bitwave_backend.dir/src/auth/PasswordHasher.cpp.o
 /usr/bin/ranlib libbitwave_backend.a

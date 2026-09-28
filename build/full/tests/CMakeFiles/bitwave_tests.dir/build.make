@@ -97,6 +97,10 @@ tests/bitwave_tests: tests/CMakeFiles/bitwave_tests.dir/test_placeholder.cpp.o
 tests/bitwave_tests: tests/CMakeFiles/bitwave_tests.dir/build.make
 tests/bitwave_tests: backend/libbitwave_backend.a
 tests/bitwave_tests: vcpkg_installed/x64-osx/debug/lib/manual-link/libCatch2Maind.a
+tests/bitwave_tests: vcpkg_installed/x64-osx/debug/lib/libsqlite3.a
+tests/bitwave_tests: vcpkg_installed/x64-osx/debug/lib/libsodium.a
+tests/bitwave_tests: vcpkg_installed/x64-osx/debug/lib/libspdlogd.a
+tests/bitwave_tests: vcpkg_installed/x64-osx/debug/lib/libfmtd.a
 tests/bitwave_tests: vcpkg_installed/x64-osx/debug/lib/libCatch2d.a
 tests/bitwave_tests: tests/CMakeFiles/bitwave_tests.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/Oscar/Documents/school/BitwaveAscend/build/full/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable bitwave_tests"
