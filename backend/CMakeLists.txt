@@ -8,6 +8,7 @@ add_library(bitwave_backend
     src/common/Version.cpp
     include/auth/PasswordHasher.h
     src/auth/PasswordHasher.cpp
+    src/entites/Player.cpp
 )
 add_library(bitwave::backend ALIAS bitwave_backend)
 

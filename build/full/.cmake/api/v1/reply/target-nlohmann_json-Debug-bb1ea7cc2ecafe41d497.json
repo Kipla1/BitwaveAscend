@@ -14,7 +14,7 @@
 		"files" : 
 		[
 			"/Users/Oscar/Documents/school/vcpkg/scripts/buildsystems/vcpkg.cmake",
-			"build/full/vcpkg_installed/x64-osx/share/unofficial-sodium/unofficial-sodiumConfig.cmake",
+			"build/full/vcpkg_installed/x64-osx/share/nlohmann_json/nlohmann_jsonConfig.cmake",
 			"backend/CMakeLists.txt"
 		],
 		"nodes" : 
@@ -25,7 +25,7 @@
 			{
 				"command" : 3,
 				"file" : 2,
-				"line" : 28,
+				"line" : 30,
 				"parent" : 0
 			},
 			{
@@ -41,7 +41,7 @@
 			{
 				"command" : 1,
 				"file" : 1,
-				"line" : 8,
+				"line" : 10,
 				"parent" : 3
 			},
 			{
@@ -53,7 +53,7 @@
 			{
 				"command" : 4,
 				"file" : 1,
-				"line" : 16,
+				"line" : 11,
 				"parent" : 3
 			}
 		]
@@ -63,29 +63,29 @@
 		"major" : 2,
 		"minor" : 10
 	},
-	"id" : "unofficial-sodium::sodium::@e17dcb4e28158375c849",
+	"id" : "nlohmann_json::@e17dcb4e28158375c849",
 	"imported" : true,
 	"interfaceCompileDependencies" : 
 	[
 		{
 			"backtrace" : 6,
-			"id" : "Threads::Threads::@e17dcb4e28158375c849"
+			"id" : "nlohmann_json::nlohmann_json::@e17dcb4e28158375c849"
 		}
 	],
 	"interfaceLinkLibraries" : 
 	[
 		{
 			"backtrace" : 6,
-			"id" : "Threads::Threads::@e17dcb4e28158375c849"
+			"id" : "nlohmann_json::nlohmann_json::@e17dcb4e28158375c849"
 		}
 	],
 	"local" : true,
-	"name" : "unofficial-sodium::sodium",
+	"name" : "nlohmann_json",
 	"paths" : 
 	{
 		"build" : "backend",
 		"source" : "backend"
 	},
 	"sources" : [],
-	"type" : "UNKNOWN_LIBRARY"
+	"type" : "INTERFACE_LIBRARY"
 }

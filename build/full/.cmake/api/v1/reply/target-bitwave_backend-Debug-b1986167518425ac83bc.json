@@ -42,25 +42,25 @@
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 19,
+				"line" : 20,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 31,
+				"line" : 32,
 				"parent" : 0
 			},
 			{
 				"command" : 3,
 				"file" : 1,
-				"line" : 14,
+				"line" : 15,
 				"parent" : 0
 			},
 			{
 				"command" : 4,
 				"file" : 1,
-				"line" : 24,
+				"line" : 25,
 				"parent" : 0
 			}
 		]
@@ -142,7 +142,8 @@
 			"sourceIndexes" : 
 			[
 				0,
-				2
+				2,
+				3
 			]
 		}
 	],
@@ -214,7 +215,8 @@
 			"sourceIndexes" : 
 			[
 				0,
-				2
+				2,
+				3
 			]
 		},
 		{
@@ -242,6 +244,12 @@
 			"backtrace" : 2,
 			"compileGroupIndex" : 0,
 			"path" : "backend/src/auth/PasswordHasher.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 2,
+			"compileGroupIndex" : 0,
+			"path" : "backend/src/entites/Player.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],

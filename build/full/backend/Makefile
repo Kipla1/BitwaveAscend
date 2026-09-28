@@ -188,6 +188,30 @@ src/common/Version.cpp.s:
 	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/src/common/Version.cpp.s
 .PHONY : src/common/Version.cpp.s
 
+src/entites/Player.o: src/entites/Player.cpp.o
+.PHONY : src/entites/Player.o
+
+# target to build an object file
+src/entites/Player.cpp.o:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/src/entites/Player.cpp.o
+.PHONY : src/entites/Player.cpp.o
+
+src/entites/Player.i: src/entites/Player.cpp.i
+.PHONY : src/entites/Player.i
+
+# target to preprocess a source file
+src/entites/Player.cpp.i:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/src/entites/Player.cpp.i
+.PHONY : src/entites/Player.cpp.i
+
+src/entites/Player.s: src/entites/Player.cpp.s
+.PHONY : src/entites/Player.s
+
+# target to generate assembly for a file
+src/entites/Player.cpp.s:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/src/entites/Player.cpp.s
+.PHONY : src/entites/Player.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -204,6 +228,9 @@ help:
 	@echo "... src/common/Version.o"
 	@echo "... src/common/Version.i"
 	@echo "... src/common/Version.s"
+	@echo "... src/entites/Player.o"
+	@echo "... src/entites/Player.i"
+	@echo "... src/entites/Player.s"
 .PHONY : help
 
 

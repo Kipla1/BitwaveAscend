@@ -1,0 +1,13 @@
+# Environment variables
+.env
+
+# Compiled binaries
+.exe
+
+# Object files
+.o
+
+# IDE folders
+.vscode
+.bin
+

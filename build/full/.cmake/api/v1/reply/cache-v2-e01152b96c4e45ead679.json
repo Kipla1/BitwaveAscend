@@ -1335,7 +1335,7 @@
 				}
 			],
 			"type" : "UNINITIALIZED",
-			"value" : "/Users/Oscar/Documents/school/vcpkg/scripts/buildsystems/vcpkg.cmake"
+			"value" : "/scripts/buildsystems/vcpkg.cmake"
 		},
 		{
 			"name" : "CMAKE_UNAME",
