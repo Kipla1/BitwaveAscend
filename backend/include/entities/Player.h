@@ -8,10 +8,11 @@
 
 class Player{
     private:
-        int health;
-        int score;
+        int health = 100;
+        int score = 0;
     
     public:
+        Player();
         void takeDamage();
         void addScore();
         int getHealth() const;
