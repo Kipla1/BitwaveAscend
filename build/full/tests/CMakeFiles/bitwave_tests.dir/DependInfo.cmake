@@ -8,6 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/Users/Oscar/Documents/school/BitwaveAscend/tests/test_auth.cpp" "tests/CMakeFiles/bitwave_tests.dir/test_auth.cpp.o" "gcc" "tests/CMakeFiles/bitwave_tests.dir/test_auth.cpp.o.d"
   "/Users/Oscar/Documents/school/BitwaveAscend/tests/test_placeholder.cpp" "tests/CMakeFiles/bitwave_tests.dir/test_placeholder.cpp.o" "gcc" "tests/CMakeFiles/bitwave_tests.dir/test_placeholder.cpp.o.d"
   )
 

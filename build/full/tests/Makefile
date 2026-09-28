@@ -532,6 +532,30 @@ ContinuousSubmit/fast:
 	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/ContinuousSubmit.dir/build.make tests/CMakeFiles/ContinuousSubmit.dir/build
 .PHONY : ContinuousSubmit/fast
 
+test_auth.o: test_auth.cpp.o
+.PHONY : test_auth.o
+
+# target to build an object file
+test_auth.cpp.o:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/bitwave_tests.dir/build.make tests/CMakeFiles/bitwave_tests.dir/test_auth.cpp.o
+.PHONY : test_auth.cpp.o
+
+test_auth.i: test_auth.cpp.i
+.PHONY : test_auth.i
+
+# target to preprocess a source file
+test_auth.cpp.i:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/bitwave_tests.dir/build.make tests/CMakeFiles/bitwave_tests.dir/test_auth.cpp.i
+.PHONY : test_auth.cpp.i
+
+test_auth.s: test_auth.cpp.s
+.PHONY : test_auth.s
+
+# target to generate assembly for a file
+test_auth.cpp.s:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/bitwave_tests.dir/build.make tests/CMakeFiles/bitwave_tests.dir/test_auth.cpp.s
+.PHONY : test_auth.cpp.s
+
 test_placeholder.o: test_placeholder.cpp.o
 .PHONY : test_placeholder.o
 
@@ -594,6 +618,9 @@ help:
 	@echo "... NightlyTest"
 	@echo "... NightlyUpdate"
 	@echo "... bitwave_tests"
+	@echo "... test_auth.o"
+	@echo "... test_auth.i"
+	@echo "... test_auth.s"
 	@echo "... test_placeholder.o"
 	@echo "... test_placeholder.i"
 	@echo "... test_placeholder.s"

@@ -3,12 +3,14 @@
 # Rule: backend must not depend on SFML. Do not add
 # target_link_libraries(bitwave_backend PUBLIC/PRIVATE sfml-*) here.
 # See docs/ARCHITECTURE.md.
+find_package(unofficial-sodium CONFIG REQUIRED)   # libsodium via vcpkg
 
 add_library(bitwave_backend
     src/common/Version.cpp
     include/auth/PasswordHasher.h
     src/auth/PasswordHasher.cpp
     src/entites/Player.cpp
+    src/auth/AuthServiceImpl.cpp
 )
 add_library(bitwave::backend ALIAS bitwave_backend)
 
@@ -20,18 +22,18 @@ target_include_directories(bitwave_backend
 target_link_libraries(bitwave_backend
     PUBLIC
         bitwave::shared
+    PRIVATE
+        unofficial-sodium::sodium
 )
 
 target_compile_features(bitwave_backend PUBLIC cxx_std_20)
 
-# Future (Day 3+, once the real systems land):
 find_package(SQLite3 REQUIRED)
-find_package(unofficial-sodium CONFIG REQUIRED)   # libsodium via vcpkg
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 target_link_libraries(bitwave_backend 
     PRIVATE
-        SQLite::SQLite3
+        SQLite3::SQLite3
         unofficial-sodium::sodium
         nlohmann_json::nlohmann_json
         spdlog::spdlog

@@ -1,23 +1,23 @@
-Start testing: Sep 27 15:39 EAT
+Start testing: Sep 28 18:40 EAT
 ----------------------------------------------------------
 1/1 Testing: backend reports a version string
 1/1 Test: backend reports a version string
 Command: "/Users/Oscar/Documents/school/BitwaveAscend/build/full/tests/bitwave_tests" "backend reports a version string"
 Directory: /Users/Oscar/Documents/school/BitwaveAscend/build/full/tests
-"backend reports a version string" start time: Sep 27 15:39 EAT
+"backend reports a version string" start time: Sep 28 18:40 EAT
 Output:
 ----------------------------------------------------------
 Filters: "backend reports a version string"
-Randomness seeded to: 932189953
+Randomness seeded to: 942187309
 ===============================================================================
 All tests passed (1 assertion in 1 test case)
 
 <end of output>
-Test time =   0.04 sec
+Test time =   0.02 sec
 ----------------------------------------------------------
 Test Passed.
-"backend reports a version string" end time: Sep 27 15:39 EAT
+"backend reports a version string" end time: Sep 28 18:40 EAT
 "backend reports a version string" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-End testing: Sep 27 15:39 EAT
+End testing: Sep 28 18:40 EAT

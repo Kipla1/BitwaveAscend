@@ -114,11 +114,26 @@ backend/CMakeFiles/bitwave_backend.dir/src/entites/Player.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/bitwave_backend.dir/src/entites/Player.cpp.s"
 	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full/backend && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/Oscar/Documents/school/BitwaveAscend/backend/src/entites/Player.cpp -o CMakeFiles/bitwave_backend.dir/src/entites/Player.cpp.s
 
+backend/CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.o: backend/CMakeFiles/bitwave_backend.dir/flags.make
+backend/CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.o: /Users/Oscar/Documents/school/BitwaveAscend/backend/src/auth/AuthServiceImpl.cpp
+backend/CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.o: backend/CMakeFiles/bitwave_backend.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/Oscar/Documents/school/BitwaveAscend/build/full/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object backend/CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.o"
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full/backend && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT backend/CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.o -MF CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.o.d -o CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.o -c /Users/Oscar/Documents/school/BitwaveAscend/backend/src/auth/AuthServiceImpl.cpp
+
+backend/CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.i"
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full/backend && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/Oscar/Documents/school/BitwaveAscend/backend/src/auth/AuthServiceImpl.cpp > CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.i
+
+backend/CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.s"
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full/backend && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/Oscar/Documents/school/BitwaveAscend/backend/src/auth/AuthServiceImpl.cpp -o CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.s
+
 # Object files for target bitwave_backend
 bitwave_backend_OBJECTS = \
 "CMakeFiles/bitwave_backend.dir/src/common/Version.cpp.o" \
 "CMakeFiles/bitwave_backend.dir/src/auth/PasswordHasher.cpp.o" \
-"CMakeFiles/bitwave_backend.dir/src/entites/Player.cpp.o"
+"CMakeFiles/bitwave_backend.dir/src/entites/Player.cpp.o" \
+"CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.o"
 
 # External object files for target bitwave_backend
 bitwave_backend_EXTERNAL_OBJECTS =
@@ -126,9 +141,10 @@ bitwave_backend_EXTERNAL_OBJECTS =
 backend/libbitwave_backend.a: backend/CMakeFiles/bitwave_backend.dir/src/common/Version.cpp.o
 backend/libbitwave_backend.a: backend/CMakeFiles/bitwave_backend.dir/src/auth/PasswordHasher.cpp.o
 backend/libbitwave_backend.a: backend/CMakeFiles/bitwave_backend.dir/src/entites/Player.cpp.o
+backend/libbitwave_backend.a: backend/CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.o
 backend/libbitwave_backend.a: backend/CMakeFiles/bitwave_backend.dir/build.make
 backend/libbitwave_backend.a: backend/CMakeFiles/bitwave_backend.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/Oscar/Documents/school/BitwaveAscend/build/full/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX static library libbitwave_backend.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/Oscar/Documents/school/BitwaveAscend/build/full/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX static library libbitwave_backend.a"
 	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full/backend && $(CMAKE_COMMAND) -P CMakeFiles/bitwave_backend.dir/cmake_clean_target.cmake
 	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full/backend && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/bitwave_backend.dir/link.txt --verbose=$(VERBOSE)
 

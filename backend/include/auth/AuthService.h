@@ -5,13 +5,9 @@
 
 namespace bitwave::auth {
 
-// Pure virtual interface — no data members, no implementation.
-// Implemented for real on Day 3 (SQLite + libsodium). Until then this
-// exists purely so other modules (GameManager, tests) can be written
-// against a stable contract.
 class AuthService {
 public:
-    virtual ~AuthService() = default; // always virtual destructor on a base class
+    virtual ~AuthService() = default;
 
     virtual bitwave::shared::RegisterResult registerUser(
         const std::string& username,

@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/bitwave_tests.dir/test_auth.cpp.o"
+  "CMakeFiles/bitwave_tests.dir/test_auth.cpp.o.d"
   "CMakeFiles/bitwave_tests.dir/test_placeholder.cpp.o"
   "CMakeFiles/bitwave_tests.dir/test_placeholder.cpp.o.d"
   "bitwave_tests"

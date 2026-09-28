@@ -140,6 +140,30 @@ bitwave_backend/fast:
 	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/build
 .PHONY : bitwave_backend/fast
 
+src/auth/AuthServiceImpl.o: src/auth/AuthServiceImpl.cpp.o
+.PHONY : src/auth/AuthServiceImpl.o
+
+# target to build an object file
+src/auth/AuthServiceImpl.cpp.o:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.o
+.PHONY : src/auth/AuthServiceImpl.cpp.o
+
+src/auth/AuthServiceImpl.i: src/auth/AuthServiceImpl.cpp.i
+.PHONY : src/auth/AuthServiceImpl.i
+
+# target to preprocess a source file
+src/auth/AuthServiceImpl.cpp.i:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.i
+.PHONY : src/auth/AuthServiceImpl.cpp.i
+
+src/auth/AuthServiceImpl.s: src/auth/AuthServiceImpl.cpp.s
+.PHONY : src/auth/AuthServiceImpl.s
+
+# target to generate assembly for a file
+src/auth/AuthServiceImpl.cpp.s:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.s
+.PHONY : src/auth/AuthServiceImpl.cpp.s
+
 src/auth/PasswordHasher.o: src/auth/PasswordHasher.cpp.o
 .PHONY : src/auth/PasswordHasher.o
 
@@ -222,6 +246,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... test"
 	@echo "... bitwave_backend"
+	@echo "... src/auth/AuthServiceImpl.o"
+	@echo "... src/auth/AuthServiceImpl.i"
+	@echo "... src/auth/AuthServiceImpl.s"
 	@echo "... src/auth/PasswordHasher.o"
 	@echo "... src/auth/PasswordHasher.i"
 	@echo "... src/auth/PasswordHasher.s"

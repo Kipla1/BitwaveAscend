@@ -18,6 +18,12 @@
   "output": "backend/CMakeFiles/bitwave_backend.dir/src/entites/Player.cpp.o"
 },
 {
+  "directory": "/Users/Oscar/Documents/school/BitwaveAscend/build/full/backend",
+  "command": "/usr/bin/c++ -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -I/Users/Oscar/Documents/school/BitwaveAscend/backend/include -I/Users/Oscar/Documents/school/BitwaveAscend/shared/include -isystem /Users/Oscar/Documents/school/BitwaveAscend/build/full/vcpkg_installed/x64-osx/include -g -std=c++20 -o CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.o -c /Users/Oscar/Documents/school/BitwaveAscend/backend/src/auth/AuthServiceImpl.cpp",
+  "file": "/Users/Oscar/Documents/school/BitwaveAscend/backend/src/auth/AuthServiceImpl.cpp",
+  "output": "backend/CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.o"
+},
+{
   "directory": "/Users/Oscar/Documents/school/BitwaveAscend/build/full/frontend",
   "command": "/usr/bin/c++ -DSFML_STATIC -I/Users/Oscar/Documents/school/BitwaveAscend/frontend/include -I/Users/Oscar/Documents/school/BitwaveAscend/shared/include -isystem /Users/Oscar/Documents/school/BitwaveAscend/build/full/vcpkg_installed/x64-osx/include -g -std=c++20 -o CMakeFiles/bitwave_frontend.dir/src/main.cpp.o -c /Users/Oscar/Documents/school/BitwaveAscend/frontend/src/main.cpp",
   "file": "/Users/Oscar/Documents/school/BitwaveAscend/frontend/src/main.cpp",
@@ -28,5 +34,11 @@
   "command": "/usr/bin/c++  -I/Users/Oscar/Documents/school/BitwaveAscend/backend/include -I/Users/Oscar/Documents/school/BitwaveAscend/shared/include -isystem /Users/Oscar/Documents/school/BitwaveAscend/build/full/vcpkg_installed/x64-osx/include -g -std=c++20 -o CMakeFiles/bitwave_tests.dir/test_placeholder.cpp.o -c /Users/Oscar/Documents/school/BitwaveAscend/tests/test_placeholder.cpp",
   "file": "/Users/Oscar/Documents/school/BitwaveAscend/tests/test_placeholder.cpp",
   "output": "tests/CMakeFiles/bitwave_tests.dir/test_placeholder.cpp.o"
+},
+{
+  "directory": "/Users/Oscar/Documents/school/BitwaveAscend/build/full/tests",
+  "command": "/usr/bin/c++  -I/Users/Oscar/Documents/school/BitwaveAscend/backend/include -I/Users/Oscar/Documents/school/BitwaveAscend/shared/include -isystem /Users/Oscar/Documents/school/BitwaveAscend/build/full/vcpkg_installed/x64-osx/include -g -std=c++20 -o CMakeFiles/bitwave_tests.dir/test_auth.cpp.o -c /Users/Oscar/Documents/school/BitwaveAscend/tests/test_auth.cpp",
+  "file": "/Users/Oscar/Documents/school/BitwaveAscend/tests/test_auth.cpp",
+  "output": "tests/CMakeFiles/bitwave_tests.dir/test_auth.cpp.o"
 }
 ]

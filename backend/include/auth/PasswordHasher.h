@@ -4,13 +4,12 @@
 
 namespace bitwave::auth {
 
-// Wraps libsodium's Argon2id password hashing so no other file
-// ever includes <sodium.h> directly.
+// Wraps libsodium's Argon2id so no other file includes <sodium.h>.
 class PasswordHasher {
 public:
-    PasswordHasher();                       // calls sodium_init()
+    PasswordHasher(); // initializes libsodium; throws std::runtime_error on failure
 
-    // Returns an encoded hash string (salt + params included), or "" on failure.
+    // Returns an encoded hash (salt + parameters included), or "" on failure.
     std::string hash(const std::string& password) const;
 
     // True only if `password` matches `storedHash`.

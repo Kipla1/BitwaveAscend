@@ -1,0 +1,31 @@
+#include "auth/PasswordHasher.h"
+
+#include <sodium.h>
+#include <stdexcept>
+
+namespace bitwave::auth {
+
+PasswordHasher::PasswordHasher() {
+    if (sodium_init() < 0) {
+        throw std::runtime_error("libsodium failed to initialize");
+    }
+}
+
+std::string PasswordHasher::hash(const std::string& password) const {
+    char out[crypto_pwhash_STRBYTES];
+    if (crypto_pwhash_str(out,
+                          password.c_str(), password.size(),
+                          crypto_pwhash_OPSLIMIT_INTERACTIVE,
+                          crypto_pwhash_MEMLIMIT_INTERACTIVE) != 0) {
+        return {};
+    }
+    return std::string(out);
+}
+
+bool PasswordHasher::verify(const std::string& storedHash,
+                            const std::string& password) const {
+    return crypto_pwhash_str_verify(storedHash.c_str(),
+                                    password.c_str(), password.size()) == 0;
+}
+
+} // namespace bitwave::auth
