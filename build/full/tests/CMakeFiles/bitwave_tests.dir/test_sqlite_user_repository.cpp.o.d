@@ -455,6 +455,7 @@ tests/CMakeFiles/bitwave_tests.dir/test_sqlite_user_repository.cpp.o: \
   /Users/Oscar/Documents/school/BitwaveAscend/build/full/vcpkg_installed/x64-osx/include/catch2/internal/catch_unique_ptr.hpp \
   /Users/Oscar/Documents/school/BitwaveAscend/build/full/vcpkg_installed/x64-osx/include/catch2/internal/catch_preprocessor_remove_parens.hpp \
   /Users/Oscar/Documents/school/BitwaveAscend/build/full/vcpkg_installed/x64-osx/include/catch2/internal/catch_unreachable.hpp \
+  /Users/Oscar/Documents/school/BitwaveAscend/backend/include/auth/Session.h \
   /Users/Oscar/Documents/school/BitwaveAscend/backend/include/auth/AuthServiceImpl.h \
   /Users/Oscar/Documents/school/BitwaveAscend/backend/include/auth/AuthService.h \
   /Users/Oscar/Documents/school/BitwaveAscend/shared/include/shared/Contracts.h \

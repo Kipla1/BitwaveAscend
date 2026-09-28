@@ -23,8 +23,9 @@ bool isValidUsername(const std::string& username) {
 } // namespace
 
 AuthServiceImpl::AuthServiceImpl(persistence::UserRepository& users,
-                                 const PasswordHasher& hasher)
-    : users_(users), hasher_(hasher) {}
+                                 const PasswordHasher& hasher,
+                                 Session& session)
+    : users_(users), hasher_(hasher), session_(session) {}
 
 shared::RegisterResult AuthServiceImpl::registerUser(const std::string& username,
                                                      const std::string& password) {
@@ -64,7 +65,7 @@ shared::LoginResult AuthServiceImpl::login(const std::string& username,
         return result;
     }
 
-    currentUserId_ = user->id;
+    session_.start({user->id, user->username, user->alias});
     result.success = true;
     result.message = "Logged in.";
     result.profile.userId = user->id;
@@ -74,7 +75,7 @@ shared::LoginResult AuthServiceImpl::login(const std::string& username,
 }
 
 void AuthServiceImpl::logout() {
-    currentUserId_.reset();
+    session_.end();
 }
 
 } // namespace bitwave::auth

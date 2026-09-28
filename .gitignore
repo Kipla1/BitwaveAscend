@@ -6,8 +6,11 @@
 
 # Object files
 .o
+.o.d
+
 
 # IDE folders
 .vscode
 .bin
 
+.kilo

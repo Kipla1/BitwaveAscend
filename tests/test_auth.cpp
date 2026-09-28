@@ -1,5 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include "auth/Session.h"
 #include "auth/AuthServiceImpl.h"
 #include "auth/PasswordHasher.h"
 #include "persistence/InMemoryUserRepository.h"
@@ -23,7 +24,8 @@ TEST_CASE("PasswordHasher salts each hash", "[auth]") {
 TEST_CASE("AuthService registration", "[auth]") {
     persistence::InMemoryUserRepository repo;
     auth::PasswordHasher hasher;
-    auth::AuthServiceImpl service(repo, hasher);
+    auth::Session session;
+    auth::AuthServiceImpl service(repo, hasher, session);
 
     SECTION("valid registration succeeds") {
         REQUIRE(service.registerUser("oscar_k", "longenough1").success);
@@ -43,7 +45,8 @@ TEST_CASE("AuthService registration", "[auth]") {
 TEST_CASE("AuthService login", "[auth]") {
     persistence::InMemoryUserRepository repo;
     auth::PasswordHasher hasher;
-    auth::AuthServiceImpl service(repo, hasher);
+    auth::Session session;
+    auth::AuthServiceImpl service(repo, hasher, session);
     service.registerUser("oscar_k", "longenough1");
 
     SECTION("correct credentials return the profile") {
@@ -58,9 +61,35 @@ TEST_CASE("AuthService login", "[auth]") {
         REQUIRE_FALSE(unknownUser.success);
         REQUIRE(wrongPassword.message == unknownUser.message);
     }
-    SECTION("logout does not crash") {
+    SECTION("successful login starts the session") {
+        REQUIRE_FALSE(session.isActive());
+        auto result = service.login("oscar_k", "longenough1");
+        REQUIRE(session.isActive());
+        REQUIRE(session.user()->id == result.profile.userId);
+        REQUIRE(session.user()->username == "oscar_k");
+    }
+    SECTION("failed login leaves the session inactive") {
+        service.login("oscar_k", "wrongpassword");
+        REQUIRE_FALSE(session.isActive());
+    }
+    SECTION("failed login does not log out the current player") {
+        service.login("oscar_k", "longenough1");
+        service.login("oscar_k", "wrongpassword");
+        REQUIRE(session.isActive());
+    }
+    SECTION("logout ends the session") {
         service.login("oscar_k", "longenough1");
         service.logout();
-        SUCCEED();
+        REQUIRE_FALSE(session.isActive());
     }
+}
+
+TEST_CASE("Session starts empty and can be started and ended", "[auth]") {
+    auth::Session session;
+    REQUIRE_FALSE(session.isActive());
+    session.start({7, "oscar_k", "oscar_k"});
+    REQUIRE(session.isActive());
+    REQUIRE(session.user()->id == 7);
+    session.end();
+    REQUIRE_FALSE(session.user().has_value());
 }

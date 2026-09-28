@@ -253,7 +253,7 @@ backend/CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/pointer_to_unary_function.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/ranges_operations.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__functional/unary_negate.h \
-  /Users/Oscar/Documents/school/BitwaveAscend/backend/include/auth/AuthService.h \
+  /Users/Oscar/Documents/school/BitwaveAscend/backend/include/auth/Session.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/string \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/algorithm \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/__bits \
@@ -359,6 +359,7 @@ backend/CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1/wctype.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/wctype.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/_types/_wctrans_t.h \
+  /Users/Oscar/Documents/school/BitwaveAscend/backend/include/auth/AuthService.h \
   /Users/Oscar/Documents/school/BitwaveAscend/shared/include/shared/Contracts.h \
   /Users/Oscar/Documents/school/BitwaveAscend/backend/include/auth/PasswordHasher.h \
   /Users/Oscar/Documents/school/BitwaveAscend/backend/include/persistence/UserRepository.h

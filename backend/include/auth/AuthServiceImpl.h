@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <optional>
 
+#include "auth/Session.h"
 #include "auth/AuthService.h"
 #include "auth/PasswordHasher.h"
 #include "persistence/UserRepository.h"
@@ -12,7 +13,9 @@ namespace bitwave::auth {
 class AuthServiceImpl : public AuthService {
 public:
     // Both references must outlive this object.
-    AuthServiceImpl(persistence::UserRepository& users, const PasswordHasher& hasher);
+    AuthServiceImpl(persistence::UserRepository& users,
+                    const PasswordHasher& hasher,
+                    Session& session);
 
     shared::RegisterResult registerUser(const std::string& username,
                                         const std::string& password) override;
@@ -23,7 +26,7 @@ public:
 private:
     persistence::UserRepository& users_;
     const PasswordHasher& hasher_;
-    std::optional<std::int64_t> currentUserId_; // stand-in until Session (Day 3+)
+    Session& session_;
 };
 
 } // namespace bitwave::auth

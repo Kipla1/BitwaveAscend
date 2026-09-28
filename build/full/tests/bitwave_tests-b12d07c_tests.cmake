@@ -8,6 +8,8 @@ add_test( [==[PasswordHasher salts each hash]==] /Users/Oscar/Documents/school/B
 set_tests_properties( [==[PasswordHasher salts each hash]==] PROPERTIES WORKING_DIRECTORY /Users/Oscar/Documents/school/BitwaveAscend/build/full/tests SKIP_RETURN_CODE 4)
 add_test( [==[PasswordHasher verifies correct and rejects wrong passwords]==] /Users/Oscar/Documents/school/BitwaveAscend/build/full/tests/bitwave_tests [==[PasswordHasher verifies correct and rejects wrong passwords]==]  )
 set_tests_properties( [==[PasswordHasher verifies correct and rejects wrong passwords]==] PROPERTIES WORKING_DIRECTORY /Users/Oscar/Documents/school/BitwaveAscend/build/full/tests SKIP_RETURN_CODE 4)
+add_test( [==[Session starts empty and can be started and ended]==] /Users/Oscar/Documents/school/BitwaveAscend/build/full/tests/bitwave_tests [==[Session starts empty and can be started and ended]==]  )
+set_tests_properties( [==[Session starts empty and can be started and ended]==] PROPERTIES WORKING_DIRECTORY /Users/Oscar/Documents/school/BitwaveAscend/build/full/tests SKIP_RETURN_CODE 4)
 add_test( [==[SqliteUserRepository stores and finds users]==] /Users/Oscar/Documents/school/BitwaveAscend/build/full/tests/bitwave_tests [==[SqliteUserRepository stores and finds users]==]  )
 set_tests_properties( [==[SqliteUserRepository stores and finds users]==] PROPERTIES WORKING_DIRECTORY /Users/Oscar/Documents/school/BitwaveAscend/build/full/tests SKIP_RETURN_CODE 4)
 add_test( [==[backend reports a version string]==] /Users/Oscar/Documents/school/BitwaveAscend/build/full/tests/bitwave_tests [==[backend reports a version string]==]  )

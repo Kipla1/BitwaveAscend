@@ -1,5 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include "auth/Session.h"
 #include "auth/AuthServiceImpl.h"
 #include "auth/PasswordHasher.h"
 #include "persistence/Database.h"
@@ -39,7 +40,8 @@ TEST_CASE("AuthServiceImpl works unchanged on the SQLite repository", "[auth][pe
     persistence::Database db(":memory:");
     persistence::SqliteUserRepository repo(db);
     auth::PasswordHasher hasher;
-    auth::AuthServiceImpl service(repo, hasher);
+    auth::Session session;
+    auth::AuthServiceImpl service(repo, hasher,session);
 
     REQUIRE(service.registerUser("oscar_k", "longenough1").success);
     REQUIRE_FALSE(service.registerUser("oscar_k", "longenough1").success);
