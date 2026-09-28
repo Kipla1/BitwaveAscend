@@ -1,1 +1,1 @@
-set(bitwave_tests_TESTS [==[backend reports a version string]==])
+set(bitwave_tests_TESTS [==[AuthService login]==] [==[AuthService registration]==] [==[AuthServiceImpl works unchanged on the SQLite repository]==] [==[PasswordHasher salts each hash]==] [==[PasswordHasher verifies correct and rejects wrong passwords]==] [==[SqliteUserRepository stores and finds users]==] [==[backend reports a version string]==])

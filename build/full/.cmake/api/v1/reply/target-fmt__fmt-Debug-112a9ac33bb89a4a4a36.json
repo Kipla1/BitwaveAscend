@@ -1,5 +1,11 @@
 {
 	"abstract" : true,
+	"artifacts" : 
+	[
+		{
+			"path" : "vcpkg_installed/x64-osx/debug/lib/libfmtd.a"
+		}
+	],
 	"backtrace" : 12,
 	"backtraceGraph" : 
 	{
@@ -30,7 +36,7 @@
 			{
 				"command" : 4,
 				"file" : 5,
-				"line" : 33,
+				"line" : 34,
 				"parent" : 0
 			},
 			{
@@ -84,7 +90,7 @@
 			{
 				"command" : 1,
 				"file" : 1,
-				"line" : 66,
+				"line" : 58,
 				"parent" : 10
 			},
 			{
@@ -100,15 +106,16 @@
 		"major" : 2,
 		"minor" : 10
 	},
-	"id" : "fmt::fmt-header-only::@e17dcb4e28158375c849",
+	"id" : "fmt::fmt::@e17dcb4e28158375c849",
 	"imported" : true,
 	"local" : true,
-	"name" : "fmt::fmt-header-only",
+	"name" : "fmt::fmt",
+	"nameOnDisk" : "libfmtd.a",
 	"paths" : 
 	{
 		"build" : "backend",
 		"source" : "backend"
 	},
 	"sources" : [],
-	"type" : "INTERFACE_LIBRARY"
+	"type" : "STATIC_LIBRARY"
 }

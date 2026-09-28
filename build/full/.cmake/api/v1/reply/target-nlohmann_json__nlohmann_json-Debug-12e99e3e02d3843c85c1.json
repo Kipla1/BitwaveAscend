@@ -7,16 +7,15 @@
 		[
 			"_add_library",
 			"add_library",
-			"_find_package",
 			"include",
-			"find_package",
-			"set_target_properties"
+			"_find_package",
+			"find_package"
 		],
 		"files" : 
 		[
 			"/Users/Oscar/Documents/school/vcpkg/scripts/buildsystems/vcpkg.cmake",
-			"/usr/local/share/cmake/Modules/FindSQLite3.cmake",
-			"build/full/vcpkg_installed/x64-osx/share/sqlite3/vcpkg-cmake-wrapper.cmake",
+			"build/full/vcpkg_installed/x64-osx/share/nlohmann_json/nlohmann_jsonTargets.cmake",
+			"build/full/vcpkg_installed/x64-osx/share/nlohmann_json/nlohmann_jsonConfig.cmake",
 			"backend/CMakeLists.txt"
 		],
 		"nodes" : 
@@ -27,13 +26,13 @@
 			{
 				"command" : 4,
 				"file" : 3,
-				"line" : 31,
+				"line" : 33,
 				"parent" : 0
 			},
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 893,
+				"line" : 939,
 				"parent" : 1
 			},
 			{
@@ -43,7 +42,7 @@
 			{
 				"command" : 2,
 				"file" : 2,
-				"line" : 2,
+				"line" : 6,
 				"parent" : 3
 			},
 			{
@@ -53,7 +52,7 @@
 			{
 				"command" : 1,
 				"file" : 1,
-				"line" : 117,
+				"line" : 58,
 				"parent" : 5
 			},
 			{
@@ -61,12 +60,6 @@
 				"file" : 0,
 				"line" : 666,
 				"parent" : 6
-			},
-			{
-				"command" : 5,
-				"file" : 2,
-				"line" : 44,
-				"parent" : 3
 			}
 		]
 	},
@@ -75,22 +68,15 @@
 		"major" : 2,
 		"minor" : 10
 	},
-	"id" : "SQLite3::SQLite3::@e17dcb4e28158375c849",
+	"id" : "nlohmann_json::nlohmann_json::@e17dcb4e28158375c849",
 	"imported" : true,
-	"interfaceLinkLibraries" : 
-	[
-		{
-			"backtrace" : 8,
-			"id" : "Threads::Threads::@e17dcb4e28158375c849"
-		}
-	],
 	"local" : true,
-	"name" : "SQLite3::SQLite3",
+	"name" : "nlohmann_json::nlohmann_json",
 	"paths" : 
 	{
 		"build" : "backend",
 		"source" : "backend"
 	},
 	"sources" : [],
-	"type" : "UNKNOWN_LIBRARY"
+	"type" : "INTERFACE_LIBRARY"
 }

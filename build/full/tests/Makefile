@@ -580,6 +580,30 @@ test_placeholder.cpp.s:
 	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/bitwave_tests.dir/build.make tests/CMakeFiles/bitwave_tests.dir/test_placeholder.cpp.s
 .PHONY : test_placeholder.cpp.s
 
+test_sqlite_user_repository.o: test_sqlite_user_repository.cpp.o
+.PHONY : test_sqlite_user_repository.o
+
+# target to build an object file
+test_sqlite_user_repository.cpp.o:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/bitwave_tests.dir/build.make tests/CMakeFiles/bitwave_tests.dir/test_sqlite_user_repository.cpp.o
+.PHONY : test_sqlite_user_repository.cpp.o
+
+test_sqlite_user_repository.i: test_sqlite_user_repository.cpp.i
+.PHONY : test_sqlite_user_repository.i
+
+# target to preprocess a source file
+test_sqlite_user_repository.cpp.i:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/bitwave_tests.dir/build.make tests/CMakeFiles/bitwave_tests.dir/test_sqlite_user_repository.cpp.i
+.PHONY : test_sqlite_user_repository.cpp.i
+
+test_sqlite_user_repository.s: test_sqlite_user_repository.cpp.s
+.PHONY : test_sqlite_user_repository.s
+
+# target to generate assembly for a file
+test_sqlite_user_repository.cpp.s:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/bitwave_tests.dir/build.make tests/CMakeFiles/bitwave_tests.dir/test_sqlite_user_repository.cpp.s
+.PHONY : test_sqlite_user_repository.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -624,6 +648,9 @@ help:
 	@echo "... test_placeholder.o"
 	@echo "... test_placeholder.i"
 	@echo "... test_placeholder.s"
+	@echo "... test_sqlite_user_repository.o"
+	@echo "... test_sqlite_user_repository.i"
+	@echo "... test_sqlite_user_repository.s"
 .PHONY : help
 
 

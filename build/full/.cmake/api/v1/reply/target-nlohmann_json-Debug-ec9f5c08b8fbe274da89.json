@@ -1,13 +1,12 @@
 {
 	"abstract" : true,
-	"backtrace" : 7,
+	"backtrace" : 5,
 	"backtraceGraph" : 
 	{
 		"commands" : 
 		[
 			"_add_library",
 			"add_library",
-			"include",
 			"_find_package",
 			"find_package",
 			"set_target_properties"
@@ -15,58 +14,47 @@
 		"files" : 
 		[
 			"/Users/Oscar/Documents/school/vcpkg/scripts/buildsystems/vcpkg.cmake",
-			"build/full/vcpkg_installed/x64-osx/share/spdlog/spdlogConfigTargets.cmake",
-			"build/full/vcpkg_installed/x64-osx/share/spdlog/spdlogConfig.cmake",
+			"build/full/vcpkg_installed/x64-osx/share/nlohmann_json/nlohmann_jsonConfig.cmake",
 			"backend/CMakeLists.txt"
 		],
 		"nodes" : 
 		[
 			{
-				"file" : 3
+				"file" : 2
 			},
 			{
-				"command" : 4,
-				"file" : 3,
+				"command" : 3,
+				"file" : 2,
 				"line" : 33,
 				"parent" : 0
 			},
 			{
-				"command" : 3,
+				"command" : 2,
 				"file" : 0,
 				"line" : 939,
 				"parent" : 1
 			},
 			{
-				"file" : 2,
-				"parent" : 2
-			},
-			{
-				"command" : 2,
-				"file" : 2,
-				"line" : 42,
-				"parent" : 3
-			},
-			{
 				"file" : 1,
-				"parent" : 4
+				"parent" : 2
 			},
 			{
 				"command" : 1,
 				"file" : 1,
-				"line" : 67,
-				"parent" : 5
+				"line" : 10,
+				"parent" : 3
 			},
 			{
 				"command" : 0,
 				"file" : 0,
 				"line" : 666,
-				"parent" : 6
+				"parent" : 4
 			},
 			{
-				"command" : 5,
+				"command" : 4,
 				"file" : 1,
-				"line" : 69,
-				"parent" : 5
+				"line" : 11,
+				"parent" : 3
 			}
 		]
 	},
@@ -75,32 +63,24 @@
 		"major" : 2,
 		"minor" : 10
 	},
-	"id" : "spdlog::spdlog_header_only::@e17dcb4e28158375c849",
+	"id" : "nlohmann_json::@e17dcb4e28158375c849",
 	"imported" : true,
 	"interfaceCompileDependencies" : 
 	[
 		{
-			"backtrace" : 8,
-			"id" : "Threads::Threads::@e17dcb4e28158375c849"
-		},
-		{
-			"backtrace" : 8,
-			"id" : "fmt::fmt::@e17dcb4e28158375c849"
+			"backtrace" : 6,
+			"id" : "nlohmann_json::nlohmann_json::@e17dcb4e28158375c849"
 		}
 	],
 	"interfaceLinkLibraries" : 
 	[
 		{
-			"backtrace" : 8,
-			"id" : "Threads::Threads::@e17dcb4e28158375c849"
-		},
-		{
-			"backtrace" : 8,
-			"id" : "fmt::fmt::@e17dcb4e28158375c849"
+			"backtrace" : 6,
+			"id" : "nlohmann_json::nlohmann_json::@e17dcb4e28158375c849"
 		}
 	],
 	"local" : true,
-	"name" : "spdlog::spdlog_header_only",
+	"name" : "nlohmann_json",
 	"paths" : 
 	{
 		"build" : "backend",

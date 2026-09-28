@@ -236,6 +236,54 @@ src/entites/Player.cpp.s:
 	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/src/entites/Player.cpp.s
 .PHONY : src/entites/Player.cpp.s
 
+src/persistence/Database.o: src/persistence/Database.cpp.o
+.PHONY : src/persistence/Database.o
+
+# target to build an object file
+src/persistence/Database.cpp.o:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/src/persistence/Database.cpp.o
+.PHONY : src/persistence/Database.cpp.o
+
+src/persistence/Database.i: src/persistence/Database.cpp.i
+.PHONY : src/persistence/Database.i
+
+# target to preprocess a source file
+src/persistence/Database.cpp.i:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/src/persistence/Database.cpp.i
+.PHONY : src/persistence/Database.cpp.i
+
+src/persistence/Database.s: src/persistence/Database.cpp.s
+.PHONY : src/persistence/Database.s
+
+# target to generate assembly for a file
+src/persistence/Database.cpp.s:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/src/persistence/Database.cpp.s
+.PHONY : src/persistence/Database.cpp.s
+
+src/persistence/SqliteUserRepository.o: src/persistence/SqliteUserRepository.cpp.o
+.PHONY : src/persistence/SqliteUserRepository.o
+
+# target to build an object file
+src/persistence/SqliteUserRepository.cpp.o:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/src/persistence/SqliteUserRepository.cpp.o
+.PHONY : src/persistence/SqliteUserRepository.cpp.o
+
+src/persistence/SqliteUserRepository.i: src/persistence/SqliteUserRepository.cpp.i
+.PHONY : src/persistence/SqliteUserRepository.i
+
+# target to preprocess a source file
+src/persistence/SqliteUserRepository.cpp.i:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/src/persistence/SqliteUserRepository.cpp.i
+.PHONY : src/persistence/SqliteUserRepository.cpp.i
+
+src/persistence/SqliteUserRepository.s: src/persistence/SqliteUserRepository.cpp.s
+.PHONY : src/persistence/SqliteUserRepository.s
+
+# target to generate assembly for a file
+src/persistence/SqliteUserRepository.cpp.s:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/src/persistence/SqliteUserRepository.cpp.s
+.PHONY : src/persistence/SqliteUserRepository.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -258,6 +306,12 @@ help:
 	@echo "... src/entites/Player.o"
 	@echo "... src/entites/Player.i"
 	@echo "... src/entites/Player.s"
+	@echo "... src/persistence/Database.o"
+	@echo "... src/persistence/Database.i"
+	@echo "... src/persistence/Database.s"
+	@echo "... src/persistence/SqliteUserRepository.o"
+	@echo "... src/persistence/SqliteUserRepository.i"
+	@echo "... src/persistence/SqliteUserRepository.s"
 .PHONY : help
 
 

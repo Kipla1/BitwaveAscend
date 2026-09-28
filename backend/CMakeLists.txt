@@ -7,10 +7,11 @@ find_package(unofficial-sodium CONFIG REQUIRED)   # libsodium via vcpkg
 
 add_library(bitwave_backend
     src/common/Version.cpp
-    include/auth/PasswordHasher.h
     src/auth/PasswordHasher.cpp
     src/entites/Player.cpp
     src/auth/AuthServiceImpl.cpp
+    src/persistence/Database.cpp
+    src/persistence/SqliteUserRepository.cpp
 )
 add_library(bitwave::backend ALIAS bitwave_backend)
 

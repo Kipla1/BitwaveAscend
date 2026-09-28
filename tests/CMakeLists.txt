@@ -17,7 +17,7 @@ endif()
 add_executable(bitwave_tests
     test_placeholder.cpp
     test_auth.cpp
-    test_auth.cpp         
+    test_sqlite_user_repository.cpp         
     # test_wallet.cpp        # Day 10+
     # test_game_modes.cpp    # Day 5+
     # test_collision.cpp     # Day 6+

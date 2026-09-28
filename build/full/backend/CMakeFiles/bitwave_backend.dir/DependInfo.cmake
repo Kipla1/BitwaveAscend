@@ -12,6 +12,8 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/Oscar/Documents/school/BitwaveAscend/backend/src/auth/PasswordHasher.cpp" "backend/CMakeFiles/bitwave_backend.dir/src/auth/PasswordHasher.cpp.o" "gcc" "backend/CMakeFiles/bitwave_backend.dir/src/auth/PasswordHasher.cpp.o.d"
   "/Users/Oscar/Documents/school/BitwaveAscend/backend/src/common/Version.cpp" "backend/CMakeFiles/bitwave_backend.dir/src/common/Version.cpp.o" "gcc" "backend/CMakeFiles/bitwave_backend.dir/src/common/Version.cpp.o.d"
   "/Users/Oscar/Documents/school/BitwaveAscend/backend/src/entites/Player.cpp" "backend/CMakeFiles/bitwave_backend.dir/src/entites/Player.cpp.o" "gcc" "backend/CMakeFiles/bitwave_backend.dir/src/entites/Player.cpp.o.d"
+  "/Users/Oscar/Documents/school/BitwaveAscend/backend/src/persistence/Database.cpp" "backend/CMakeFiles/bitwave_backend.dir/src/persistence/Database.cpp.o" "gcc" "backend/CMakeFiles/bitwave_backend.dir/src/persistence/Database.cpp.o.d"
+  "/Users/Oscar/Documents/school/BitwaveAscend/backend/src/persistence/SqliteUserRepository.cpp" "backend/CMakeFiles/bitwave_backend.dir/src/persistence/SqliteUserRepository.cpp.o" "gcc" "backend/CMakeFiles/bitwave_backend.dir/src/persistence/SqliteUserRepository.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

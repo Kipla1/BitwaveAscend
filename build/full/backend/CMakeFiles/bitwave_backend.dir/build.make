@@ -128,12 +128,42 @@ backend/CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.s: cmake_for
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.s"
 	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full/backend && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/Oscar/Documents/school/BitwaveAscend/backend/src/auth/AuthServiceImpl.cpp -o CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.s
 
+backend/CMakeFiles/bitwave_backend.dir/src/persistence/Database.cpp.o: backend/CMakeFiles/bitwave_backend.dir/flags.make
+backend/CMakeFiles/bitwave_backend.dir/src/persistence/Database.cpp.o: /Users/Oscar/Documents/school/BitwaveAscend/backend/src/persistence/Database.cpp
+backend/CMakeFiles/bitwave_backend.dir/src/persistence/Database.cpp.o: backend/CMakeFiles/bitwave_backend.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/Oscar/Documents/school/BitwaveAscend/build/full/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object backend/CMakeFiles/bitwave_backend.dir/src/persistence/Database.cpp.o"
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full/backend && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT backend/CMakeFiles/bitwave_backend.dir/src/persistence/Database.cpp.o -MF CMakeFiles/bitwave_backend.dir/src/persistence/Database.cpp.o.d -o CMakeFiles/bitwave_backend.dir/src/persistence/Database.cpp.o -c /Users/Oscar/Documents/school/BitwaveAscend/backend/src/persistence/Database.cpp
+
+backend/CMakeFiles/bitwave_backend.dir/src/persistence/Database.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/bitwave_backend.dir/src/persistence/Database.cpp.i"
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full/backend && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/Oscar/Documents/school/BitwaveAscend/backend/src/persistence/Database.cpp > CMakeFiles/bitwave_backend.dir/src/persistence/Database.cpp.i
+
+backend/CMakeFiles/bitwave_backend.dir/src/persistence/Database.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/bitwave_backend.dir/src/persistence/Database.cpp.s"
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full/backend && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/Oscar/Documents/school/BitwaveAscend/backend/src/persistence/Database.cpp -o CMakeFiles/bitwave_backend.dir/src/persistence/Database.cpp.s
+
+backend/CMakeFiles/bitwave_backend.dir/src/persistence/SqliteUserRepository.cpp.o: backend/CMakeFiles/bitwave_backend.dir/flags.make
+backend/CMakeFiles/bitwave_backend.dir/src/persistence/SqliteUserRepository.cpp.o: /Users/Oscar/Documents/school/BitwaveAscend/backend/src/persistence/SqliteUserRepository.cpp
+backend/CMakeFiles/bitwave_backend.dir/src/persistence/SqliteUserRepository.cpp.o: backend/CMakeFiles/bitwave_backend.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/Oscar/Documents/school/BitwaveAscend/build/full/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object backend/CMakeFiles/bitwave_backend.dir/src/persistence/SqliteUserRepository.cpp.o"
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full/backend && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT backend/CMakeFiles/bitwave_backend.dir/src/persistence/SqliteUserRepository.cpp.o -MF CMakeFiles/bitwave_backend.dir/src/persistence/SqliteUserRepository.cpp.o.d -o CMakeFiles/bitwave_backend.dir/src/persistence/SqliteUserRepository.cpp.o -c /Users/Oscar/Documents/school/BitwaveAscend/backend/src/persistence/SqliteUserRepository.cpp
+
+backend/CMakeFiles/bitwave_backend.dir/src/persistence/SqliteUserRepository.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/bitwave_backend.dir/src/persistence/SqliteUserRepository.cpp.i"
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full/backend && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/Oscar/Documents/school/BitwaveAscend/backend/src/persistence/SqliteUserRepository.cpp > CMakeFiles/bitwave_backend.dir/src/persistence/SqliteUserRepository.cpp.i
+
+backend/CMakeFiles/bitwave_backend.dir/src/persistence/SqliteUserRepository.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/bitwave_backend.dir/src/persistence/SqliteUserRepository.cpp.s"
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full/backend && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/Oscar/Documents/school/BitwaveAscend/backend/src/persistence/SqliteUserRepository.cpp -o CMakeFiles/bitwave_backend.dir/src/persistence/SqliteUserRepository.cpp.s
+
 # Object files for target bitwave_backend
 bitwave_backend_OBJECTS = \
 "CMakeFiles/bitwave_backend.dir/src/common/Version.cpp.o" \
 "CMakeFiles/bitwave_backend.dir/src/auth/PasswordHasher.cpp.o" \
 "CMakeFiles/bitwave_backend.dir/src/entites/Player.cpp.o" \
-"CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.o"
+"CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.o" \
+"CMakeFiles/bitwave_backend.dir/src/persistence/Database.cpp.o" \
+"CMakeFiles/bitwave_backend.dir/src/persistence/SqliteUserRepository.cpp.o"
 
 # External object files for target bitwave_backend
 bitwave_backend_EXTERNAL_OBJECTS =
@@ -142,9 +172,11 @@ backend/libbitwave_backend.a: backend/CMakeFiles/bitwave_backend.dir/src/common/
 backend/libbitwave_backend.a: backend/CMakeFiles/bitwave_backend.dir/src/auth/PasswordHasher.cpp.o
 backend/libbitwave_backend.a: backend/CMakeFiles/bitwave_backend.dir/src/entites/Player.cpp.o
 backend/libbitwave_backend.a: backend/CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.o
+backend/libbitwave_backend.a: backend/CMakeFiles/bitwave_backend.dir/src/persistence/Database.cpp.o
+backend/libbitwave_backend.a: backend/CMakeFiles/bitwave_backend.dir/src/persistence/SqliteUserRepository.cpp.o
 backend/libbitwave_backend.a: backend/CMakeFiles/bitwave_backend.dir/build.make
 backend/libbitwave_backend.a: backend/CMakeFiles/bitwave_backend.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/Oscar/Documents/school/BitwaveAscend/build/full/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX static library libbitwave_backend.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/Oscar/Documents/school/BitwaveAscend/build/full/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX static library libbitwave_backend.a"
 	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full/backend && $(CMAKE_COMMAND) -P CMakeFiles/bitwave_backend.dir/cmake_clean_target.cmake
 	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full/backend && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/bitwave_backend.dir/link.txt --verbose=$(VERBOSE)
 

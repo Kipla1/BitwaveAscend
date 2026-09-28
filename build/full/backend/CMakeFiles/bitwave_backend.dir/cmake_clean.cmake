@@ -7,6 +7,10 @@ file(REMOVE_RECURSE
   "CMakeFiles/bitwave_backend.dir/src/common/Version.cpp.o.d"
   "CMakeFiles/bitwave_backend.dir/src/entites/Player.cpp.o"
   "CMakeFiles/bitwave_backend.dir/src/entites/Player.cpp.o.d"
+  "CMakeFiles/bitwave_backend.dir/src/persistence/Database.cpp.o"
+  "CMakeFiles/bitwave_backend.dir/src/persistence/Database.cpp.o.d"
+  "CMakeFiles/bitwave_backend.dir/src/persistence/SqliteUserRepository.cpp.o"
+  "CMakeFiles/bitwave_backend.dir/src/persistence/SqliteUserRepository.cpp.o.d"
   "libbitwave_backend.a"
   "libbitwave_backend.pdb"
 )

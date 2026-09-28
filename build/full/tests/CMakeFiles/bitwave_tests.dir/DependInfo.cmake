@@ -10,6 +10,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/Oscar/Documents/school/BitwaveAscend/tests/test_auth.cpp" "tests/CMakeFiles/bitwave_tests.dir/test_auth.cpp.o" "gcc" "tests/CMakeFiles/bitwave_tests.dir/test_auth.cpp.o.d"
   "/Users/Oscar/Documents/school/BitwaveAscend/tests/test_placeholder.cpp" "tests/CMakeFiles/bitwave_tests.dir/test_placeholder.cpp.o" "gcc" "tests/CMakeFiles/bitwave_tests.dir/test_placeholder.cpp.o.d"
+  "/Users/Oscar/Documents/school/BitwaveAscend/tests/test_sqlite_user_repository.cpp" "tests/CMakeFiles/bitwave_tests.dir/test_sqlite_user_repository.cpp.o" "gcc" "tests/CMakeFiles/bitwave_tests.dir/test_sqlite_user_repository.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

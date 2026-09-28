@@ -3,6 +3,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/bitwave_tests.dir/test_auth.cpp.o.d"
   "CMakeFiles/bitwave_tests.dir/test_placeholder.cpp.o"
   "CMakeFiles/bitwave_tests.dir/test_placeholder.cpp.o.d"
+  "CMakeFiles/bitwave_tests.dir/test_sqlite_user_repository.cpp.o"
+  "CMakeFiles/bitwave_tests.dir/test_sqlite_user_repository.cpp.o.d"
   "bitwave_tests"
   "bitwave_tests-b12d07c_tests.cmake"
   "bitwave_tests.pdb"
