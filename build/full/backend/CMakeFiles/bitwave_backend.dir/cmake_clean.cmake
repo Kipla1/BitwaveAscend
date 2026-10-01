@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/bitwave_backend.dir/src/auth/AliasServiceImpl.cpp.o"
+  "CMakeFiles/bitwave_backend.dir/src/auth/AliasServiceImpl.cpp.o.d"
   "CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.o"
   "CMakeFiles/bitwave_backend.dir/src/auth/AuthServiceImpl.cpp.o.d"
   "CMakeFiles/bitwave_backend.dir/src/auth/PasswordHasher.cpp.o"

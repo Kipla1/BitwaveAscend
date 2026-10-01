@@ -22,9 +22,27 @@ public:
         record.id = nextId_++;
         record.username = username;
         record.passwordHash = passwordHash;
-        record.alias = username; // placeholder until AliasService (Day 4)
+        record.alias = username; // default alias at registration; changeable via updateAlias
         users_.emplace(username, record);
         return record.id;
+    }
+
+    bool isAliasAvailable(const std::string& alias) const override {
+        for (const auto& [username, record] : users_) {
+            if (record.alias == alias) return false;
+        }
+        return true;
+    }
+
+    bool updateAlias(std::int64_t userId, const std::string& alias) override {
+        if (!isAliasAvailable(alias)) return false; // single-threaded test fake; no race to guard against
+        for (auto& [username, record] : users_) {
+            if (record.id == userId) {
+                record.alias = alias;
+                return true;
+            }
+        }
+        return false; // userId not found
     }
 
 private:

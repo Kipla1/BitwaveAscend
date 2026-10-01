@@ -1,3 +1,7 @@
+add_test( [==[AliasService changes and validates the alias]==] /Users/Oscar/Documents/school/BitwaveAscend/build/full/tests/bitwave_tests [==[AliasService changes and validates the alias]==]  )
+set_tests_properties( [==[AliasService changes and validates the alias]==] PROPERTIES WORKING_DIRECTORY /Users/Oscar/Documents/school/BitwaveAscend/build/full/tests SKIP_RETURN_CODE 4)
+add_test( [==[AliasService requires an active session]==] /Users/Oscar/Documents/school/BitwaveAscend/build/full/tests/bitwave_tests [==[AliasService requires an active session]==]  )
+set_tests_properties( [==[AliasService requires an active session]==] PROPERTIES WORKING_DIRECTORY /Users/Oscar/Documents/school/BitwaveAscend/build/full/tests SKIP_RETURN_CODE 4)
 add_test( [==[AuthService login]==] /Users/Oscar/Documents/school/BitwaveAscend/build/full/tests/bitwave_tests [==[AuthService login]==]  )
 set_tests_properties( [==[AuthService login]==] PROPERTIES WORKING_DIRECTORY /Users/Oscar/Documents/school/BitwaveAscend/build/full/tests SKIP_RETURN_CODE 4)
 add_test( [==[AuthService registration]==] /Users/Oscar/Documents/school/BitwaveAscend/build/full/tests/bitwave_tests [==[AuthService registration]==]  )

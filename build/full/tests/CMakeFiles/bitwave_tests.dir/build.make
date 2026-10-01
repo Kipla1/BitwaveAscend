@@ -114,11 +114,26 @@ tests/CMakeFiles/bitwave_tests.dir/test_sqlite_user_repository.cpp.s: cmake_forc
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/bitwave_tests.dir/test_sqlite_user_repository.cpp.s"
 	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full/tests && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/Oscar/Documents/school/BitwaveAscend/tests/test_sqlite_user_repository.cpp -o CMakeFiles/bitwave_tests.dir/test_sqlite_user_repository.cpp.s
 
+tests/CMakeFiles/bitwave_tests.dir/test_alias.cpp.o: tests/CMakeFiles/bitwave_tests.dir/flags.make
+tests/CMakeFiles/bitwave_tests.dir/test_alias.cpp.o: /Users/Oscar/Documents/school/BitwaveAscend/tests/test_alias.cpp
+tests/CMakeFiles/bitwave_tests.dir/test_alias.cpp.o: tests/CMakeFiles/bitwave_tests.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/Oscar/Documents/school/BitwaveAscend/build/full/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object tests/CMakeFiles/bitwave_tests.dir/test_alias.cpp.o"
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full/tests && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT tests/CMakeFiles/bitwave_tests.dir/test_alias.cpp.o -MF CMakeFiles/bitwave_tests.dir/test_alias.cpp.o.d -o CMakeFiles/bitwave_tests.dir/test_alias.cpp.o -c /Users/Oscar/Documents/school/BitwaveAscend/tests/test_alias.cpp
+
+tests/CMakeFiles/bitwave_tests.dir/test_alias.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/bitwave_tests.dir/test_alias.cpp.i"
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full/tests && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/Oscar/Documents/school/BitwaveAscend/tests/test_alias.cpp > CMakeFiles/bitwave_tests.dir/test_alias.cpp.i
+
+tests/CMakeFiles/bitwave_tests.dir/test_alias.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/bitwave_tests.dir/test_alias.cpp.s"
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full/tests && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/Oscar/Documents/school/BitwaveAscend/tests/test_alias.cpp -o CMakeFiles/bitwave_tests.dir/test_alias.cpp.s
+
 # Object files for target bitwave_tests
 bitwave_tests_OBJECTS = \
 "CMakeFiles/bitwave_tests.dir/test_placeholder.cpp.o" \
 "CMakeFiles/bitwave_tests.dir/test_auth.cpp.o" \
-"CMakeFiles/bitwave_tests.dir/test_sqlite_user_repository.cpp.o"
+"CMakeFiles/bitwave_tests.dir/test_sqlite_user_repository.cpp.o" \
+"CMakeFiles/bitwave_tests.dir/test_alias.cpp.o"
 
 # External object files for target bitwave_tests
 bitwave_tests_EXTERNAL_OBJECTS =
@@ -126,6 +141,7 @@ bitwave_tests_EXTERNAL_OBJECTS =
 tests/bitwave_tests: tests/CMakeFiles/bitwave_tests.dir/test_placeholder.cpp.o
 tests/bitwave_tests: tests/CMakeFiles/bitwave_tests.dir/test_auth.cpp.o
 tests/bitwave_tests: tests/CMakeFiles/bitwave_tests.dir/test_sqlite_user_repository.cpp.o
+tests/bitwave_tests: tests/CMakeFiles/bitwave_tests.dir/test_alias.cpp.o
 tests/bitwave_tests: tests/CMakeFiles/bitwave_tests.dir/build.make
 tests/bitwave_tests: backend/libbitwave_backend.a
 tests/bitwave_tests: vcpkg_installed/x64-osx/debug/lib/manual-link/libCatch2Maind.a
@@ -135,7 +151,7 @@ tests/bitwave_tests: vcpkg_installed/x64-osx/debug/lib/libspdlogd.a
 tests/bitwave_tests: vcpkg_installed/x64-osx/debug/lib/libfmtd.a
 tests/bitwave_tests: vcpkg_installed/x64-osx/debug/lib/libCatch2d.a
 tests/bitwave_tests: tests/CMakeFiles/bitwave_tests.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/Oscar/Documents/school/BitwaveAscend/build/full/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable bitwave_tests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/Oscar/Documents/school/BitwaveAscend/build/full/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable bitwave_tests"
 	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full/tests && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/bitwave_tests.dir/link.txt --verbose=$(VERBOSE)
 	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full/tests && /usr/local/bin/cmake -D TEST_TARGET=bitwave_tests -D TEST_EXECUTABLE=/Users/Oscar/Documents/school/BitwaveAscend/build/full/tests/bitwave_tests -D TEST_EXECUTOR= -D TEST_WORKING_DIR=/Users/Oscar/Documents/school/BitwaveAscend/build/full/tests -D TEST_SPEC= -D TEST_EXTRA_ARGS= -D "TEST_PROPERTIES=SKIP_RETURN_CODE;4" -D "TEST_PREFIX=''" -D "TEST_SUFFIX=''" -D TEST_LIST=bitwave_tests_TESTS -D TEST_REPORTER= -D TEST_OUTPUT_DIR= -D TEST_OUTPUT_PREFIX= -D TEST_OUTPUT_SUFFIX= -D TEST_DL_PATHS= -D TEST_DL_FRAMEWORK_PATHS= -D CTEST_FILE=/Users/Oscar/Documents/school/BitwaveAscend/build/full/tests/bitwave_tests-b12d07c_tests.cmake -D ADD_TAGS_AS_LABELS=FALSE -P /Users/Oscar/Documents/school/BitwaveAscend/build/full/vcpkg_installed/x64-osx/share/catch2/CatchAddTests.cmake
 

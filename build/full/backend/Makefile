@@ -140,6 +140,30 @@ bitwave_backend/fast:
 	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/build
 .PHONY : bitwave_backend/fast
 
+src/auth/AliasServiceImpl.o: src/auth/AliasServiceImpl.cpp.o
+.PHONY : src/auth/AliasServiceImpl.o
+
+# target to build an object file
+src/auth/AliasServiceImpl.cpp.o:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/src/auth/AliasServiceImpl.cpp.o
+.PHONY : src/auth/AliasServiceImpl.cpp.o
+
+src/auth/AliasServiceImpl.i: src/auth/AliasServiceImpl.cpp.i
+.PHONY : src/auth/AliasServiceImpl.i
+
+# target to preprocess a source file
+src/auth/AliasServiceImpl.cpp.i:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/src/auth/AliasServiceImpl.cpp.i
+.PHONY : src/auth/AliasServiceImpl.cpp.i
+
+src/auth/AliasServiceImpl.s: src/auth/AliasServiceImpl.cpp.s
+.PHONY : src/auth/AliasServiceImpl.s
+
+# target to generate assembly for a file
+src/auth/AliasServiceImpl.cpp.s:
+	cd /Users/Oscar/Documents/school/BitwaveAscend/build/full && $(MAKE) $(MAKESILENT) -f backend/CMakeFiles/bitwave_backend.dir/build.make backend/CMakeFiles/bitwave_backend.dir/src/auth/AliasServiceImpl.cpp.s
+.PHONY : src/auth/AliasServiceImpl.cpp.s
+
 src/auth/AuthServiceImpl.o: src/auth/AuthServiceImpl.cpp.o
 .PHONY : src/auth/AuthServiceImpl.o
 
@@ -294,6 +318,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... test"
 	@echo "... bitwave_backend"
+	@echo "... src/auth/AliasServiceImpl.o"
+	@echo "... src/auth/AliasServiceImpl.i"
+	@echo "... src/auth/AliasServiceImpl.s"
 	@echo "... src/auth/AuthServiceImpl.o"
 	@echo "... src/auth/AuthServiceImpl.i"
 	@echo "... src/auth/AuthServiceImpl.s"
