@@ -21,7 +21,7 @@ add_executable(bitwave_tests
     test_alias.cpp    
     test_player_profile.cpp
     test_game_api.cpp
-    # test_wallet.cpp        # Day 10+
+    test_wallet.cpp        
     # test_game_modes.cpp    # Day 5+
     # test_collision.cpp     # Day 6+
     # test_persistence.cpp   # Day 3-11

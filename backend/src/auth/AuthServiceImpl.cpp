@@ -24,10 +24,12 @@ bool isValidUsername(const std::string& username) {
 
 AuthServiceImpl::AuthServiceImpl(persistence::UserRepository& users,
                                 persistence::PlayerProfileRepository& progress,
+                                persistence::WalletRepository& wallets,
                                 const PasswordHasher& hasher,
                                 Session& session)
     : users_(users),
       progress_(progress),
+      wallets_(wallets),
       hasher_(hasher),
       session_(session) {}
 
@@ -58,6 +60,7 @@ shared::RegisterResult AuthServiceImpl::registerUser(const std::string& username
     // AuthServiceImpl doesn't need to know about player_progress (or any
     // future per-user table, e.g. wallets).
     progress_.create(*userId);
+    wallets_.create(*userId);
 
     result.success = true;
     result.message = "Account created.";

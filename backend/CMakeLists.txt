@@ -17,6 +17,8 @@ add_library(bitwave_backend
     src/persistence/SqlitePlayerProfileRepository.cpp
     src/player/PlayerProfileServiceImpl.cpp
     src/core/GameAPIImpl.cpp
+    src/persistence/SqliteWalletRepository.cpp
+    src/payment/WalletImpl.cpp
 )
 add_library(bitwave::backend ALIAS bitwave_backend)
 

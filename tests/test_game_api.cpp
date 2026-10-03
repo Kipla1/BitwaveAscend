@@ -6,6 +6,7 @@
 #include "persistence/InMemoryPlayerProfileRepository.h"
 #include "persistence/InMemoryUserRepository.h"
 #include "player/PlayerProfileServiceImpl.h"
+#include "persistence/InMemoryWalletRepository.h"
 
 using namespace bitwave;
 
@@ -14,9 +15,10 @@ namespace {
 struct Fixture {
     persistence::InMemoryUserRepository users;
     persistence::InMemoryPlayerProfileRepository progress;
+    persistence::InMemoryWalletRepository wallets;
     auth::PasswordHasher hasher;
     auth::Session session;
-    auth::AuthServiceImpl authService{users, progress, hasher, session};
+    auth::AuthServiceImpl authService{users, progress, wallets, hasher, session};
     player::PlayerProfileServiceImpl profileService{progress, session};
     core::GameAPIImpl api{authService, profileService};
 };

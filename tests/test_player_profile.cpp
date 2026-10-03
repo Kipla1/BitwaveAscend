@@ -6,6 +6,7 @@
 #include "persistence/SqlitePlayerProfileRepository.h"
 #include "persistence/SqliteUserRepository.h"
 #include "player/PlayerProfileServiceImpl.h"
+#include "persistence/SqliteWalletRepository.h"
 
 using namespace bitwave;
 
@@ -13,11 +14,11 @@ TEST_CASE("PlayerProfileService reflects registration and reported progress", "[
     persistence::Database db(":memory:");
     persistence::SqliteUserRepository users(db);
     persistence::SqlitePlayerProfileRepository progress(db);
+    persistence::SqliteWalletRepository wallets(db);
     auth::PasswordHasher hasher;
     auth::Session session;
-    auth::AuthServiceImpl authService(users, progress, hasher, session);
+    auth::AuthServiceImpl authService(users, progress, wallets, hasher, session);
     player::PlayerProfileServiceImpl profileService(progress, session);
-
     SECTION("no profile before login") {
         REQUIRE_FALSE(profileService.getCurrentProfile().has_value());
     }

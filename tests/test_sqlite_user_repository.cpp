@@ -6,6 +6,7 @@
 #include "persistence/Database.h"
 #include "persistence/SqliteUserRepository.h"
 #include "persistence/SqlitePlayerProfileRepository.h"
+#include "persistence/SqliteWalletRepository.h"
 
 using namespace bitwave;
 
@@ -41,9 +42,10 @@ TEST_CASE("AuthServiceImpl works unchanged on the SQLite repository", "[auth][pe
     persistence::Database db(":memory:");
     persistence::SqliteUserRepository repo(db);
     persistence::SqlitePlayerProfileRepository progress(db);
+    persistence::SqliteWalletRepository wallets(db);
     auth::PasswordHasher hasher;
     auth::Session session;
-    auth::AuthServiceImpl service(repo, progress, hasher, session);
+    auth::AuthServiceImpl service(repo, progress, wallets, hasher, session);
 
     REQUIRE(service.registerUser("oscar_k", "longenough1").success);
     REQUIRE_FALSE(service.registerUser("oscar_k", "longenough1").success);

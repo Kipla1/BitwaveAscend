@@ -8,6 +8,7 @@
 #include "auth/PasswordHasher.h"
 #include "persistence/UserRepository.h"
 #include "persistence/PlayerProfileRepository.h"
+#include "persistence/WalletRepository.h"
 
 namespace bitwave::auth {
 
@@ -16,6 +17,7 @@ public:
     // Both references must outlive this object.
     AuthServiceImpl(persistence::UserRepository& users,
                     persistence::PlayerProfileRepository& progress,
+                    persistence::WalletRepository& wallets,
                     const PasswordHasher& hasher,
                     Session& session);
 
@@ -28,6 +30,7 @@ public:
 private:
     persistence::UserRepository& users_;
     persistence::PlayerProfileRepository& progress_;
+    persistence::WalletRepository& wallets_;
     const PasswordHasher& hasher_;
     Session& session_;
 };

@@ -5,6 +5,7 @@
 #include "auth/PasswordHasher.h"
 #include "persistence/InMemoryUserRepository.h"
 #include "persistence/InMemoryPlayerProfileRepository.h"
+#include "persistence/InMemoryWalletRepository.h"
 
 using namespace bitwave;
 
@@ -27,7 +28,8 @@ TEST_CASE("AuthService registration", "[auth]") {
     persistence::InMemoryPlayerProfileRepository progress;
     auth::PasswordHasher hasher;
     auth::Session session;
-    auth::AuthServiceImpl service(repo, progress, hasher, session);
+    persistence::InMemoryWalletRepository wallets;
+    auth::AuthServiceImpl service(repo, progress, wallets, hasher, session);
 
     SECTION("valid registration succeeds") {
         REQUIRE(service.registerUser("oscar_k", "longenough1").success);
@@ -49,7 +51,8 @@ TEST_CASE("AuthService login", "[auth]") {
     persistence::InMemoryPlayerProfileRepository progress;
     auth::PasswordHasher hasher;
     auth::Session session;
-    auth::AuthServiceImpl service(repo, progress, hasher, session);
+    persistence::InMemoryWalletRepository wallets;
+    auth::AuthServiceImpl service(repo, progress, wallets, hasher, session);
     service.registerUser("oscar_k", "longenough1");
 
     SECTION("correct credentials return the profile") {
