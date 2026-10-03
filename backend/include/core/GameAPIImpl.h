@@ -1,5 +1,7 @@
 #pragma once
 
+#include <optional>
+
 #include "auth/AuthService.h"
 #include "player/PlayerProfile.h"
 #include "shared/GameAPI.h"
@@ -19,7 +21,7 @@ public:
     shared::RegisterResult registerUser(const std::string& username,
                                         const std::string& password) override;
     void logout() override;
-    shared::PlayerProfile getProfile() override;
+    std::optional<shared::PlayerProfile> getProfile() override;
 
     void startMode(shared::GameModeType mode) override;
     void handleAction(shared::PlayerAction action) override;

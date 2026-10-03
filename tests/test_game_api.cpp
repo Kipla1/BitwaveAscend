@@ -32,15 +32,14 @@ TEST_CASE("GameAPIImpl register, login and getProfile work end-to-end", "[core]"
     REQUIRE(loginResult.success);
 
     auto profile = f.api.getProfile();
-    REQUIRE(profile.username == "oscar_k");
-    REQUIRE(profile.highestScore == 0);
+    REQUIRE(profile.has_value());
+    REQUIRE(profile->username == "oscar_k");
+    REQUIRE(profile->highestScore == 0);
 }
 
 TEST_CASE("GameAPIImpl getProfile is empty when nobody is logged in", "[core]") {
     Fixture f;
-    auto profile = f.api.getProfile();
-    REQUIRE(profile.userId == 0);
-    REQUIRE(profile.username.empty());
+    REQUIRE_FALSE(f.api.getProfile().has_value());
 }
 
 TEST_CASE("GameAPIImpl logout clears the session via AuthService", "[core]") {
@@ -48,7 +47,7 @@ TEST_CASE("GameAPIImpl logout clears the session via AuthService", "[core]") {
     f.api.registerUser("oscar_k", "longenough1");
     f.api.login("oscar_k", "longenough1");
     f.api.logout();
-    REQUIRE(f.api.getProfile().userId == 0);
+    REQUIRE_FALSE(f.api.getProfile().has_value());
 }
 
 TEST_CASE("GameAPIImpl's unimplemented methods fail loudly, not silently", "[core]") {

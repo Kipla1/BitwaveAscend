@@ -32,13 +32,8 @@ void GameAPIImpl::logout() {
     authService_.logout();
 }
 
-shared::PlayerProfile GameAPIImpl::getProfile() {
-    // GameAPI's contract returns PlayerProfile by value, with no way to say
-    // "nobody is logged in" — a default-constructed, empty profile is the
-    // closest fit today. Worth raising with the team: should GameAPI
-    // distinguish "not logged in" explicitly (e.g. via std::optional, or a
-    // documented empty userId == 0 convention)?
-    return profileService_.getCurrentProfile().value_or(shared::PlayerProfile{});
+std::optional<shared::PlayerProfile> GameAPIImpl::getProfile() {
+    return profileService_.getCurrentProfile();
 }
 
 void GameAPIImpl::startMode(shared::GameModeType) { notImplemented("startMode"); }
