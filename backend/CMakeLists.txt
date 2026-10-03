@@ -14,6 +14,8 @@ add_library(bitwave_backend
     src/persistence/SqliteUserRepository.cpp
     src/auth/AliasServiceImpl.cpp
     include/auth/AliasServiceImpl.h
+    src/persistence/SqlitePlayerProfileRepository.cpp
+    src/player/PlayerProfileServiceImpl.cpp
 )
 add_library(bitwave::backend ALIAS bitwave_backend)
 
