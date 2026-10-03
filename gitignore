@@ -8,7 +8,7 @@ vcpkg_installed/
 vcpkg/
 
 # IDE / editor
-.vs/
+.vs/git 
 .vscode/
 *.swp
 .idea/

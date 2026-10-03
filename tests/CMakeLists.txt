@@ -20,6 +20,7 @@ add_executable(bitwave_tests
     test_sqlite_user_repository.cpp     
     test_alias.cpp    
     test_player_profile.cpp
+    test_game_api.cpp
     # test_wallet.cpp        # Day 10+
     # test_game_modes.cpp    # Day 5+
     # test_collision.cpp     # Day 6+

@@ -16,6 +16,7 @@ add_library(bitwave_backend
     include/auth/AliasServiceImpl.h
     src/persistence/SqlitePlayerProfileRepository.cpp
     src/player/PlayerProfileServiceImpl.cpp
+    src/core/GameAPIImpl.cpp
 )
 add_library(bitwave::backend ALIAS bitwave_backend)
 
