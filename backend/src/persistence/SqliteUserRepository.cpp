@@ -33,7 +33,7 @@ SqliteUserRepository::SqliteUserRepository(Database& db) : db_(db) {
         "  id            INTEGER PRIMARY KEY AUTOINCREMENT,"
         "  username      TEXT    NOT NULL UNIQUE,"
         "  password_hash TEXT    NOT NULL,"
-        "  alias         TEXT    NOT NULL,"
+        "  alias         TEXT    NOT NULL UNIQUE,"
         "  created_at    TEXT    NOT NULL DEFAULT CURRENT_TIMESTAMP"
         ");");
 }
@@ -75,6 +75,28 @@ std::optional<std::int64_t> SqliteUserRepository::create(
                                  sqlite3_errmsg(db_.handle()));
     }
     return sqlite3_last_insert_rowid(db_.handle());
+}
+
+bool SqliteUserRepository::isAliasAvailable(const std::string& alias) const {
+    auto stmt = prepare(db_.handle(), "SELECT 1 FROM users WHERE alias = ?;");
+    sqlite3_bind_text(stmt.get(), 1, alias.c_str(), -1, SQLITE_TRANSIENT);
+    return sqlite3_step(stmt.get()) != SQLITE_ROW; // no row found = available
+}
+
+bool SqliteUserRepository::updateAlias(std::int64_t userId, const std::string& alias) {
+    auto stmt = prepare(db_.handle(), "UPDATE users SET alias = ? WHERE id = ?;");
+    sqlite3_bind_text(stmt.get(), 1, alias.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int64(stmt.get(), 2, userId);
+
+    const int rc = sqlite3_step(stmt.get());
+    if (rc == SQLITE_CONSTRAINT) {
+        return false; // alias already taken — the UNIQUE constraint caught it
+    }
+    if (rc != SQLITE_DONE) {
+        throw std::runtime_error(std::string("Update failed: ") +
+                                 sqlite3_errmsg(db_.handle()));
+    }
+    return sqlite3_changes(db_.handle()) > 0; // false if userId didn't exist
 }
 
 } // namespace bitwave::persistence

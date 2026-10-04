@@ -14,6 +14,7 @@
 
 #include <string>
 #include <vector>
+#include <optional>
 
 #include "shared/Contracts.h"
 
@@ -31,7 +32,7 @@ public:
 
     virtual void logout() = 0;
 
-    virtual PlayerProfile getProfile() = 0;
+    virtual std::optional<PlayerProfile> getProfile() = 0;
 
     virtual void startMode(GameModeType mode) = 0;
 

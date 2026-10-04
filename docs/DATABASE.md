@@ -63,3 +63,4 @@ an agreed target instead of being designed ad hoc.
 - All queries are parameterized (no string-concatenated SQL).
 - The frontend never accesses SQLite; it only ever sees `PlayerProfile`,
   `GameState`, `StoreItem`, wallet balance, etc. through `GameAPI`.
+

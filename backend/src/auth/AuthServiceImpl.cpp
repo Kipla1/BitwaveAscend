@@ -23,9 +23,15 @@ bool isValidUsername(const std::string& username) {
 } // namespace
 
 AuthServiceImpl::AuthServiceImpl(persistence::UserRepository& users,
-                                 const PasswordHasher& hasher,
-                                 Session& session)
-    : users_(users), hasher_(hasher), session_(session) {}
+                                persistence::PlayerProfileRepository& progress,
+                                persistence::WalletRepository& wallets,
+                                const PasswordHasher& hasher,
+                                Session& session)
+    : users_(users),
+      progress_(progress),
+      wallets_(wallets),
+      hasher_(hasher),
+      session_(session) {}
 
 shared::RegisterResult AuthServiceImpl::registerUser(const std::string& username,
                                                      const std::string& password) {
@@ -45,10 +51,16 @@ shared::RegisterResult AuthServiceImpl::registerUser(const std::string& username
         result.message = "Could not create account. Please try again.";
         return result;
     }
-    if (!users_.create(username, hash)) {
+    const auto userId = users_.create(username, hash);
+    if (!userId) {
         result.message = "That username is already taken.";
         return result;
     }
+    // TODO: once Game/app-setup exists, move this call up a level so
+    // AuthServiceImpl doesn't need to know about player_progress (or any
+    // future per-user table, e.g. wallets).
+    progress_.create(*userId);
+    wallets_.create(*userId);
 
     result.success = true;
     result.message = "Account created.";

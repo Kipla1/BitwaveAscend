@@ -1,10 +1,15 @@
 #pragma once
 
-// PaymentService
-// TODO(Day 10): Wallet / store / payment logic.
+#include <cstdint>
+#include "shared/Contracts.h"
 
 namespace bitwave::payment {
 
-// class PaymentService { };
+class PaymentService {
+public:
+    virtual ~PaymentService() = default;
+
+    virtual shared::PurchaseResult purchaseItem(std::int64_t itemId) = 0;
+};
 
 } // namespace bitwave::payment

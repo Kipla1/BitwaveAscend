@@ -19,9 +19,12 @@ public:
 
     virtual std::optional<UserRecord> findByUsername(const std::string& username) const = 0;
 
-    // Returns the new user's id, or std::nullopt if the username is taken.
     virtual std::optional<std::int64_t> create(const std::string& username,
                                                const std::string& passwordHash) = 0;
+
+    virtual bool isAliasAvailable(const std::string& alias) const =0;
+
+    virtual bool updateAlias(std::int64_t userId, const std::string& alias) = 0;
 };
 
 } // namespace bitwave::persistence

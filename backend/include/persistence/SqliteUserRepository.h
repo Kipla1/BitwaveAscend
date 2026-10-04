@@ -15,6 +15,10 @@ public:
     std::optional<std::int64_t> create(const std::string& username,
                                        const std::string& passwordHash) override;
 
+    bool isAliasAvailable(const std::string& alias) const override;
+
+    bool updateAlias(std::int64_t userId, const std::string& alias) override;
+
 private:
     Database& db_;
 };

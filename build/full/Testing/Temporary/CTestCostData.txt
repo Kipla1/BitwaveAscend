@@ -1,9 +1,0 @@
-backend reports a version string 7 0.00235085
-AuthService login 3 4.38803
-AuthService registration 3 1.04436
-PasswordHasher salts each hash 3 0.681605
-PasswordHasher verifies correct and rejects wrong passwords 3 1.12493
-AuthServiceImpl works unchanged on the SQLite repository 2 2.10899
-SqliteUserRepository stores and finds users 2 0.00874022
-Session starts empty and can be started and ended 1 0.0148448
----
