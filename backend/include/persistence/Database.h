@@ -21,6 +21,13 @@ public:
     // For statements with no user input (schema setup). Throws on failure.
     void execute(const std::string& sql);
 
+    // Transaction control. A statement run between begin/commit (or
+    // begin/rollback) is only durably saved if commit() is reached —
+    // see PaymentService for why this matters for a multi-table purchase.
+    void beginTransaction();
+    void commitTransaction();
+    void rollbackTransaction();
+
 private:
     sqlite3* db_ = nullptr;
 };

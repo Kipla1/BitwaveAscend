@@ -15,6 +15,18 @@ Database::Database(const std::string& path) {
     execute("PRAGMA foreign_keys = ON;");
 }
 
+void Database::beginTransaction() {
+    execute("BEGIN TRANSACTION;");
+}
+
+void Database::commitTransaction() {
+    execute("COMMIT;");
+}
+
+void Database::rollbackTransaction() {
+    execute("ROLLBACK;");
+}
+
 Database::~Database() {
     sqlite3_close(db_);
 }
