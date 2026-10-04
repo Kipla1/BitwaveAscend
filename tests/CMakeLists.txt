@@ -23,6 +23,7 @@ add_executable(bitwave_tests
     test_game_api.cpp
     test_wallet.cpp        
     test_store.cpp
+    test_inventory.cpp
     # test_game_modes.cpp    # Day 5+
     # test_collision.cpp     # Day 6+
     # test_persistence.cpp   # Day 3-11
