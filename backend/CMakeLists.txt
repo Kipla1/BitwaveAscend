@@ -23,6 +23,7 @@ add_library(bitwave_backend
     src/payment/StoreImpl.cpp
     src/persistence/SqliteInventoryRepository.cpp
     src/player/Inventory.cpp
+    src/persistence/SqliteTransactionRepository.cpp
 )
 add_library(bitwave::backend ALIAS bitwave_backend)
 
