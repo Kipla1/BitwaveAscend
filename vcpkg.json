@@ -9,6 +9,7 @@
     "libsodium",
     "nlohmann-json",
     "spdlog",
+    "curl",
     {
       "name": "catch2",
       "features": []

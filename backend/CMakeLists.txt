@@ -3,6 +3,8 @@
 # Rule: backend must not depend on SFML. Do not add
 # target_link_libraries(bitwave_backend PUBLIC/PRIVATE sfml-*) here.
 # See docs/ARCHITECTURE.md.
+find_package(CURL REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
 find_package(unofficial-sodium CONFIG REQUIRED)   # libsodium via vcpkg
 
 add_library(bitwave_backend
@@ -27,6 +29,8 @@ add_library(bitwave_backend
     src/payment/PaymentServiceImpl.cpp
     src/persistence/SqlitePaymentOrderRepository.cpp
     src/payment/TopUpServiceImpl.cpp
+    src/payment/CurlHttpClient.cpp
+    src/payment/PaystackGateway.cpp
 )
 add_library(bitwave::backend ALIAS bitwave_backend)
 
@@ -40,6 +44,8 @@ target_link_libraries(bitwave_backend
         bitwave::shared
     PRIVATE
         unofficial-sodium::sodium
+        CURL::libcurl
+        nlohmann_json::nlohmann_json
 )
 
 target_compile_features(bitwave_backend PUBLIC cxx_std_20)
@@ -54,6 +60,9 @@ target_link_libraries(bitwave_backend
         nlohmann_json::nlohmann_json
         spdlog::spdlog
 )
+
+add_executable(paystack_smoke tools/paystack_smoke.cpp)
+target_link_libraries(paystack_smoke PRIVATE bitwave_backend)
 # Intentionally not linked yet: nothing in backend/ uses them during
 # repository initialization, and CMake will warn/fail on unused
 # find_package() calls in some configurations.
