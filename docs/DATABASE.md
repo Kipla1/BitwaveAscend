@@ -57,6 +57,17 @@ an agreed target instead of being designed ad hoc.
 | `timestamp` | |
 | `status`    | e.g. pending/succeeded/failed |
 
+## `payment_orders`
+{
+  id            integer [primary key]
+  user_id       integer [not null, ref: > users.id]
+  reference     text [unique, not null]
+  amount_cents  integer [not null]
+  currency      text [not null]
+  coins         integer [not null]
+  status        text [not null, default: 'pending', note: 'pending | succeeded | failed']
+  created_at    timestamp [not null, default: `CURRENT_TIMESTAMP`]
+}
 ## Access Rules
 
 - Only `backend/persistence/` repositories touch SQLite directly.
