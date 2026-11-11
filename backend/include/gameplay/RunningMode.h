@@ -1,10 +1,16 @@
 #pragma once
 
-// RunningMode
-// TODO: Implemented in a later development day, not during initialization.
+#include "core/GameMode.h"
 
 namespace bitwave::gameplay {
 
-// class RunningMode { };
+class RunningMode final : public core::GameMode {
+public:
+    shared::GameModeType type() const override { return shared::GameModeType::Running; }
+    void start() override;
+    void handleAction(shared::PlayerAction action, bool pressed) override;
+    void update(float deltaTime) override;
+    bool finished() const override { return gameOver_; }
+};
 
 } // namespace bitwave::gameplay

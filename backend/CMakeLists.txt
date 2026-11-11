@@ -4,19 +4,32 @@
 # target_link_libraries(bitwave_backend PUBLIC/PRIVATE sfml-*) here.
 # See docs/ARCHITECTURE.md.
 find_package(unofficial-sodium CONFIG REQUIRED)   # libsodium via vcpkg
+find_package(SQLite3 REQUIRED)
 
 add_library(bitwave_backend
     src/common/Version.cpp
     src/auth/PasswordHasher.cpp
-    src/entites/Player.cpp
+    src/entities/Entity.cpp
+    src/entities/Character.cpp
+    src/entities/Player.cpp
+    src/entities/Enemy.cpp
     src/auth/AuthServiceImpl.cpp
     src/persistence/Database.cpp
     src/persistence/SqliteUserRepository.cpp
+    src/persistence/SqliteLeaderboardRepository.cpp
     src/auth/AliasServiceImpl.cpp
     include/auth/AliasServiceImpl.h
     src/persistence/SqlitePlayerProfileRepository.cpp
     src/player/PlayerProfileServiceImpl.cpp
     src/core/GameAPIImpl.cpp
+    src/core/Game.cpp
+    src/core/GameMode.cpp
+    src/core/GameManager.cpp
+    src/gameplay/Physics.cpp
+    src/gameplay/Combat.cpp
+    src/gameplay/FightingMode.cpp
+    src/gameplay/RunningMode.cpp
+    src/gameplay/FlappyMode.cpp
     src/persistence/SqliteWalletRepository.cpp
     src/payment/WalletImpl.cpp
     src/persistence/SqliteStoreItemRepository.cpp
@@ -38,20 +51,7 @@ target_link_libraries(bitwave_backend
         bitwave::shared
     PRIVATE
         unofficial-sodium::sodium
+        SQLite3::SQLite3
 )
 
 target_compile_features(bitwave_backend PUBLIC cxx_std_20)
-
-find_package(SQLite3 REQUIRED)
-find_package(nlohmann_json CONFIG REQUIRED)
-find_package(spdlog CONFIG REQUIRED)
-target_link_libraries(bitwave_backend 
-    PRIVATE
-        SQLite3::SQLite3
-        unofficial-sodium::sodium
-        nlohmann_json::nlohmann_json
-        spdlog::spdlog
-)
-# Intentionally not linked yet: nothing in backend/ uses them during
-# repository initialization, and CMake will warn/fail on unused
-# find_package() calls in some configurations.

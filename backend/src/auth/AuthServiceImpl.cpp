@@ -56,9 +56,7 @@ shared::RegisterResult AuthServiceImpl::registerUser(const std::string& username
         result.message = "That username is already taken.";
         return result;
     }
-    // TODO: once Game/app-setup exists, move this call up a level so
-    // AuthServiceImpl doesn't need to know about player_progress (or any
-    // future per-user table, e.g. wallets).
+    // Move account setup to an app-level transaction when one exists.
     progress_.create(*userId);
     wallets_.create(*userId);
 

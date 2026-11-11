@@ -1,22 +1,23 @@
 #pragma once
 
-// Player
-// TODO(Day 2+): Define the Player entity.
-// Placeholder only — no gameplay logic during repository initialization.
+#include <cstdint>
+#include "entities/Character.h"
 
+namespace bitwave::entities {
 
+class Player final : public Character {
+public:
+    Player();
+    int score() const { return score_; }
+    void addScore(int amount = 1) { score_ += amount; }
+    void setSkinId(std::int64_t id) { skinId_ = id; }
+    std::int64_t skinId() const { return skinId_; }
+    void jump();
+    void flap();
 
-class Player{
-    private:
-        int health = 100;
-        int score = 0;
-    
-    public:
-        Player();
-        void takeDamage();
-        void addScore();
-        int getHealth() const;
-        int getScore() const;
+private:
+    int score_{0};
+    std::int64_t skinId_{0}; // 0 means the built-in skin.
 };
 
-
+} // namespace bitwave::entities

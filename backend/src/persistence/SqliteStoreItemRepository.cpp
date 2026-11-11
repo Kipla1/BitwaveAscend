@@ -30,7 +30,17 @@ shared::StoreItem readRow(sqlite3_stmt* stmt) {
     item.name = columnText(stmt, 1);
     item.price = sqlite3_column_int64(stmt, 2);
     item.description = columnText(stmt, 3);
+    item.kind = columnText(stmt, 4) == "cosmetic"
+        ? shared::StoreItemKind::Cosmetic : shared::StoreItemKind::PowerUp;
+    item.resourceKey = columnText(stmt, 5);
     return item;
+}
+
+bool hasColumn(sqlite3* db, const char* name) {
+    auto stmt = prepare(db, "PRAGMA table_info(store_items);");
+    while (sqlite3_step(stmt.get()) == SQLITE_ROW)
+        if (columnText(stmt.get(), 1) == name) return true;
+    return false;
 }
 
 } // namespace
@@ -41,8 +51,16 @@ SqliteStoreItemRepository::SqliteStoreItemRepository(Database& db) : db_(db) {
         "  id          INTEGER PRIMARY KEY AUTOINCREMENT,"
         "  name        TEXT    NOT NULL,"
         "  price       INTEGER NOT NULL,"
-        "  description TEXT    NOT NULL"
+        "  description TEXT    NOT NULL,"
+        "  kind        TEXT    NOT NULL DEFAULT 'power_up',"
+        "  resource_key TEXT   NOT NULL DEFAULT ''"
         ");");
+
+    // Add the cosmetic columns to saves made by the earlier schema.
+    if (!hasColumn(db_.handle(), "kind"))
+        db_.execute("ALTER TABLE store_items ADD COLUMN kind TEXT NOT NULL DEFAULT 'power_up';");
+    if (!hasColumn(db_.handle(), "resource_key"))
+        db_.execute("ALTER TABLE store_items ADD COLUMN resource_key TEXT NOT NULL DEFAULT '';" );
 
     // Seed starter items on first run only. This project has no admin
     // tooling to populate the catalog by hand, and a store with nothing
@@ -54,16 +72,25 @@ SqliteStoreItemRepository::SqliteStoreItemRepository(Database& db) : db_(db) {
 
     if (isEmpty) {
         db_.execute(
-            "INSERT INTO store_items (name, price, description) VALUES "
-            "('Health Potion', 50, 'Restores health during a run'),"
-            "('Speed Boost',  100, 'Temporary movement speed increase'),"
-            "('Extra Life',   250, 'One additional life on game over');");
+        "INSERT INTO store_items (name, price, description, kind, resource_key) VALUES "
+        "('Health Potion', 50, 'Restores health during a run', 'power_up', ''),"
+        "('Speed Boost',  100, 'Temporary movement speed increase', 'power_up', ''),"
+        "('Extra Life',   250, 'One additional life on game over', 'power_up', '');");
     }
+
+    // Paid skins are optional; the built-in skin needs no store item.
+    db_.execute(
+        "INSERT INTO store_items (name, price, description, kind, resource_key) "
+        "SELECT 'Neon Skin', 300, 'A bright alternate look', 'cosmetic', 'skin.neon' "
+        "WHERE NOT EXISTS (SELECT 1 FROM store_items WHERE resource_key='skin.neon');"
+        "INSERT INTO store_items (name, price, description, kind, resource_key) "
+        "SELECT 'Cloud Skin', 500, 'A soft cloud themed look', 'cosmetic', 'skin.cloud' "
+        "WHERE NOT EXISTS (SELECT 1 FROM store_items WHERE resource_key='skin.cloud');");
 }
 
 std::vector<shared::StoreItem> SqliteStoreItemRepository::listAll() const {
     auto stmt = prepare(db_.handle(),
-        "SELECT id, name, price, description FROM store_items ORDER BY id;");
+        "SELECT id, name, price, description, kind, resource_key FROM store_items ORDER BY id;");
 
     std::vector<shared::StoreItem> items;
     while (sqlite3_step(stmt.get()) == SQLITE_ROW) {
@@ -74,7 +101,7 @@ std::vector<shared::StoreItem> SqliteStoreItemRepository::listAll() const {
 
 std::optional<shared::StoreItem> SqliteStoreItemRepository::findById(std::int64_t itemId) const {
     auto stmt = prepare(db_.handle(),
-        "SELECT id, name, price, description FROM store_items WHERE id = ?;");
+        "SELECT id, name, price, description, kind, resource_key FROM store_items WHERE id = ?;");
     sqlite3_bind_int64(stmt.get(), 1, itemId);
 
     if (sqlite3_step(stmt.get()) != SQLITE_ROW) {

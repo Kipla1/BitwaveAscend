@@ -82,3 +82,25 @@ TEST_CASE("PaymentService requires an active session", "[payment]") {
     auto result = f.payments.purchaseItem(1);
     REQUIRE_FALSE(result.success);
 }
+
+TEST_CASE("Cosmetic purchases require coins and cannot be bought twice", "[payment]") {
+    Fixture f;
+    f.authService.registerUser("oscar_k", "longenough1");
+    f.authService.login("oscar_k", "longenough1");
+
+    std::int64_t skinId=0;
+    for (const auto& item : f.store.listItems())
+        if (item.kind==shared::StoreItemKind::Cosmetic && item.price>0) {
+            skinId=item.itemId;
+            break;
+        }
+    REQUIRE(skinId>0);
+
+    f.wallet.addFunds(600);
+    const auto first=f.payments.purchaseItem(skinId);
+    REQUIRE(first.success);
+    REQUIRE(f.wallet.getBalance()==600-first.amount);
+    const auto second=f.payments.purchaseItem(skinId);
+    REQUIRE_FALSE(second.success);
+    REQUIRE(f.wallet.getBalance()==600-first.amount);
+}

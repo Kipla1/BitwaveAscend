@@ -32,6 +32,11 @@ public:
         }
     }
 
+    void updateEquippedSkin(std::int64_t userId, std::int64_t itemId) override {
+        auto it=progress_.find(userId);
+        if (it!=progress_.end()) it->second.equippedSkinId=itemId;
+    }
+
 private:
     std::unordered_map<std::int64_t, ProgressRecord> progress_;
 };

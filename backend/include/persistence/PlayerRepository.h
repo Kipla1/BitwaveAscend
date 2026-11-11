@@ -1,10 +1,10 @@
 #pragma once
 
-// PlayerRepository
-// TODO(Day 3-11): SQLite-backed persistence. Not implemented yet.
+#include "persistence/PlayerProfileRepository.h"
 
 namespace bitwave::persistence {
 
-// class PlayerRepository { };
+// Compatibility name for code that treats a player's progress as a record.
+using PlayerRepository = PlayerProfileRepository;
 
 } // namespace bitwave::persistence

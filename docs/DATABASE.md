@@ -1,8 +1,8 @@
-# Database (Planned Schema)
+# Database
 
-SQLite, introduced Day 3. **Not implemented during repository
-initialization** — this document exists so persistence work on Day 3+ has
-an agreed target instead of being designed ad hoc.
+SQLite persists accounts, player progress, wallets, inventory, store items,
+and purchase history. The leaderboard uses saved scores and aliases without
+duplicating those records.
 
 ## `users`
 
@@ -21,6 +21,10 @@ an agreed target instead of being designed ad hoc.
 | `user_id`       | FK → `users.id` |
 | `highest_score` | |
 | `current_level` | |
+| `equipped_skin_id` | Defaults to `0` (built-in skin) |
+
+The leaderboard joins saved highest scores to `users.alias`, sorts scores
+descending, and uses user ID for stable ties. Zero-score accounts are omitted.
 
 ## `wallets`
 
@@ -45,6 +49,8 @@ an agreed target instead of being designed ad hoc.
 | `name`        | |
 | `price`       | |
 | `description` | |
+| `kind` | `power_up` or `cosmetic`; defaults to `power_up` for older saves |
+| `resource_key` | Frontend asset lookup key for a cosmetic |
 
 ## `transactions`
 
@@ -59,8 +65,12 @@ an agreed target instead of being designed ad hoc.
 
 ## Access Rules
 
-- Only `backend/persistence/` repositories touch SQLite directly.
+- Only repositories under `backend/src/persistence/` touch SQLite directly.
 - All queries are parameterized (no string-concatenated SQL).
 - The frontend never accesses SQLite; it only ever sees `PlayerProfile`,
   `GameState`, `StoreItem`, wallet balance, etc. through `GameAPI`.
+
+Firebase cloud sync is not connected yet. Local SQLite saves progress during
+play when a new personal best is reached; remote sync needs Firebase Auth,
+Firestore, and an authenticated client.
 

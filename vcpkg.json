@@ -7,8 +7,6 @@
     "sfml",
     "sqlite3",
     "libsodium",
-    "nlohmann-json",
-    "spdlog",
     {
       "name": "catch2",
       "features": []

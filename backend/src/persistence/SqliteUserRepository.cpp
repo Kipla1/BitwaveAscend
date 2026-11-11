@@ -64,7 +64,7 @@ std::optional<std::int64_t> SqliteUserRepository::create(
 
     sqlite3_bind_text(stmt.get(), 1, username.c_str(),     -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(stmt.get(), 2, passwordHash.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt.get(), 3, username.c_str(),     -1, SQLITE_TRANSIENT); // alias placeholder (Day 4)
+    sqlite3_bind_text(stmt.get(), 3, username.c_str(),     -1, SQLITE_TRANSIENT); // Start with the username as the alias.
 
     const int rc = sqlite3_step(stmt.get());
     if (rc == SQLITE_CONSTRAINT) {

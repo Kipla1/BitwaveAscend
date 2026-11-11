@@ -13,6 +13,7 @@ public:
     std::optional<ProgressRecord> find(std::int64_t userId) const override;
     void updateHighestScore(std::int64_t userId, long long score) override;
     void updateLevel(std::int64_t userId, int level) override;
+    void updateEquippedSkin(std::int64_t userId, std::int64_t itemId) override;
 
 private:
     Database& db_;
