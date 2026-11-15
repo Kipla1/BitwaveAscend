@@ -5,8 +5,7 @@
 
 namespace bitwave::persistence {
 
-// Temporary stand-in until the SQLite repository exists. Also useful
-// permanently as a fast fake for unit tests.
+// Fast in-memory fake for unit tests.
 class InMemoryUserRepository : public UserRepository {
 public:
     std::optional<UserRecord> findByUsername(const std::string& username) const override {
@@ -15,14 +14,44 @@ public:
         return it->second;
     }
 
+    std::optional<UserRecord> findByGoogleSub(const std::string& googleSub) const override {
+        if (googleSub.empty()) return std::nullopt;
+        for (const auto& [username, record] : users_) {
+            if (record.googleSub == googleSub) {
+                return record;
+            }
+        }
+        return std::nullopt;
+    }
+
     std::optional<std::int64_t> create(const std::string& username,
                                        const std::string& passwordHash) override {
-        if (users_.count(username) != 0) return std::nullopt;
+        if (users_.count(username) != 0 || !isAliasAvailable(username)) {
+            return std::nullopt;
+        }
         UserRecord record;
         record.id = nextId_++;
         record.username = username;
         record.passwordHash = passwordHash;
         record.alias = username; // default alias at registration; changeable via updateAlias
+        users_.emplace(username, record);
+        return record.id;
+    }
+
+    std::optional<std::int64_t> createGoogleUser(const std::string& username,
+                                                 const std::string& email,
+                                                 const std::string& googleSub) override {
+        if (googleSub.empty() || users_.count(username) != 0 ||
+            !isAliasAvailable(username) || findByGoogleSub(googleSub).has_value()) {
+            return std::nullopt;
+        }
+        UserRecord record;
+        record.id = nextId_++;
+        record.username = username;
+        record.passwordHash = ""; // Google-only account has no password hash
+        record.alias = username;
+        record.email = email;
+        record.googleSub = googleSub;
         users_.emplace(username, record);
         return record.id;
     }

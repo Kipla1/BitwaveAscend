@@ -17,6 +17,8 @@ public:
         const std::string& username,
         const std::string& password) = 0;
 
+    virtual bitwave::shared::LoginResult loginWithGoogle() = 0;
+
     virtual void logout() = 0;
 };
 

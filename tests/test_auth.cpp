@@ -1,10 +1,11 @@
 #include <catch2/catch_test_macros.hpp>
 
-#include "auth/Session.h"
 #include "auth/AuthServiceImpl.h"
+#include "auth/FakeGoogleAuthProvider.h"
 #include "auth/PasswordHasher.h"
-#include "persistence/InMemoryUserRepository.h"
+#include "auth/Session.h"
 #include "persistence/InMemoryPlayerProfileRepository.h"
+#include "persistence/InMemoryUserRepository.h"
 #include "persistence/InMemoryWalletRepository.h"
 
 using namespace bitwave;
@@ -86,6 +87,72 @@ TEST_CASE("AuthService login", "[auth]") {
     SECTION("logout ends the session") {
         service.login("oscar_k", "longenough1");
         service.logout();
+        REQUIRE_FALSE(session.isActive());
+    }
+}
+
+TEST_CASE("AuthService Google sign-in", "[auth]") {
+    persistence::InMemoryUserRepository repo;
+    persistence::InMemoryPlayerProfileRepository progress;
+    persistence::InMemoryWalletRepository wallets;
+    auth::PasswordHasher hasher;
+    auth::Session session;
+    auth::FakeGoogleAuthProvider google;
+    auth::AuthServiceImpl service(repo, progress, wallets, hasher, session, google);
+
+    SECTION("first-time Google sign-in creates account, progress, and starts session") {
+        google.googleSub = "sub-oscar-1";
+        google.email = "oscar.k@example.com";
+
+        auto result = service.loginWithGoogle();
+        REQUIRE(result.success);
+        REQUIRE(result.profile.username == "oscar_k");
+        REQUIRE(session.isActive());
+        REQUIRE(session.user()->id == result.profile.userId);
+        REQUIRE(repo.findByGoogleSub("sub-oscar-1").has_value());
+        REQUIRE(progress.find(result.profile.userId).has_value());
+    }
+    SECTION("returning Google user logs into the same account") {
+        google.googleSub = "sub-oscar-1";
+        google.email = "oscar@example.com";
+
+        auto first = service.loginWithGoogle();
+        service.logout();
+        auto second = service.loginWithGoogle();
+
+        REQUIRE(first.success);
+        REQUIRE(second.success);
+        REQUIRE(first.profile.userId == second.profile.userId);
+        REQUIRE(first.profile.username == second.profile.username);
+    }
+    SECTION("Google-only account cannot log in with a password") {
+        google.googleSub = "sub-oscar-1";
+        google.email = "oscar@example.com";
+        auto googleLogin = service.loginWithGoogle();
+        REQUIRE(googleLogin.success);
+        service.logout();
+
+        auto passAttempt = service.login(googleLogin.profile.username, "anypassword123");
+        auto emptyAttempt = service.login(googleLogin.profile.username, "");
+        REQUIRE_FALSE(passAttempt.success);
+        REQUIRE_FALSE(emptyAttempt.success);
+        REQUIRE(passAttempt.message == "Invalid username or password.");
+        REQUIRE_FALSE(session.isActive());
+    }
+    SECTION("username collision with existing password account appends suffix") {
+        REQUIRE(service.registerUser("oscar", "longenough1").success);
+
+        google.googleSub = "sub-oscar-2";
+        google.email = "oscar@example.com";
+        auto result = service.loginWithGoogle();
+
+        REQUIRE(result.success);
+        REQUIRE(result.profile.username == "oscar_1");
+    }
+    SECTION("failed or cancelled Google sign-in does not start session") {
+        google.failAuth = true;
+        auto result = service.loginWithGoogle();
+        REQUIRE_FALSE(result.success);
         REQUIRE_FALSE(session.isActive());
     }
 }

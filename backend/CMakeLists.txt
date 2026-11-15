@@ -5,7 +5,7 @@
 # See docs/ARCHITECTURE.md.
 find_package(CURL REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
-find_package(unofficial-sodium CONFIG REQUIRED)   # libsodium via vcpkg
+find_package(odium CONFIG REQUIRED)   # libsodium via vcpkg
 
 add_library(bitwave_backend
     src/common/Version.cpp
