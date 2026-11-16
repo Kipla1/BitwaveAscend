@@ -18,6 +18,7 @@ add_executable(bitwave_tests
     test_placeholder.cpp
     test_auth.cpp
     test_sqlite_user_repository.cpp     
+    test_leaderboard.cpp
     test_alias.cpp    
     test_player_profile.cpp
     test_game_api.cpp

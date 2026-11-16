@@ -14,6 +14,7 @@ public:
     std::optional<shared::PlayerProfile> getCurrentProfile() const override;
     void reportScore(long long score) override;
     void setLevel(int level) override;
+    void setEquippedSkin(std::int64_t itemId) override;
 
 private:
     persistence::PlayerProfileRepository& progress_;

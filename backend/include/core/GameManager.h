@@ -1,12 +1,23 @@
 #pragma once
 
-// GameManager
-// TODO(Day 2): Define the GameManager interface.
-// This is an intentionally empty placeholder created during repository
-// initialization. Do not implement logic here yet.
+#include <memory>
+#include "core/Game.h"
 
 namespace bitwave::core {
 
-// class GameManager { };
+class GameManager {
+public:
+    void startMode(shared::GameModeType type,
+                   shared::Difficulty difficulty = shared::Difficulty::Medium);
+    void handleAction(shared::PlayerAction action, bool pressed = true);
+    void update(float deltaTime);
+    bool hasMode() const { return static_cast<bool>(game_); }
+    shared::GameState state() const;
+    void setSkinId(std::int64_t itemId);
+
+private:
+    std::unique_ptr<Game> game_;
+    std::int64_t skinId_{0};
+};
 
 } // namespace bitwave::core

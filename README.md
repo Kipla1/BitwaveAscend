@@ -4,9 +4,10 @@ A 2D game built for a university Object-Oriented Programming group project,
 demonstrating a full user lifecycle: registration/login, multiple game
 modes, persistent progression, and a virtual wallet/store.
 
-> **Status:** Repository initialization only. No gameplay, authentication,
-> payments, or persistence logic has been implemented yet. See
-> [Scope Rules](#scope-rules) below.
+> **Status:** The backend has three basic 2D gameplay modes, character
+> movement and combat, difficulty tuning, account services, and a wallet-backed
+> store. The frontend still needs to connect controls and rendering through
+> `GameAPI`.
 
 ## Description
 
@@ -36,10 +37,8 @@ scalability, basic security, and performance-conscious design.
 | Build system        | CMake (+ CMakePresets)     |
 | Rendering/Input     | SFML 3                     |
 | Database            | SQLite                     |
-| JSON                | nlohmann/json              |
 | Password hashing    | libsodium (Argon2id)       |
 | Testing             | Catch2                     |
-| Logging             | spdlog                     |
 | Package management  | vcpkg                      |
 | Version control     | Git / GitHub               |
 
@@ -129,7 +128,8 @@ configures and builds.
 - Two-week timeline and daily milestones: [`docs/DEVELOPMENT_PLAN.md`](docs/DEVELOPMENT_PLAN.md)
 - Architecture and module boundaries: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
 - Frontend/backend contract: [`docs/API_CONTRACT.md`](docs/API_CONTRACT.md)
-- Planned database schema: [`docs/DATABASE.md`](docs/DATABASE.md)
+- SQLite schema and persistence: [`docs/DATABASE.md`](docs/DATABASE.md)
+- Firebase cloud-save setup: [`docs/FIREBASE_SETUP.md`](docs/FIREBASE_SETUP.md)
 - Security requirements: [`docs/SECURITY.md`](docs/SECURITY.md)
 
 ## Team Responsibilities
@@ -159,10 +159,7 @@ in [`docs/DEVELOPMENT_PLAN.md`](docs/DEVELOPMENT_PLAN.md).
 
 ## Scope Rules
 
-This is a two-week university project — avoid scope creep. Do **not**
-introduce Django, Flask, a Node.js backend, REST APIs, PostgreSQL, MySQL,
-Redis, Docker, WebSockets, cloud infrastructure, or microservices unless a
-future requirement explicitly demands it. The current phase is
-**repository initialization only**: no gameplay, authentication, payment,
-or persistence logic exists yet — see the `TODO` comments throughout
-`backend/include/` for what's intentionally left unimplemented.
+This is a two-week university project — keep the backend focused. It is a
+local C++ application core, not a web service. Paid skins use the game's
+virtual wallet and inventory; the built-in skin remains free, and cosmetics
+do not gate any game mode or change gameplay stats.

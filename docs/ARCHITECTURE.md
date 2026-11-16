@@ -53,12 +53,10 @@ password hashes directly.
 | `auth`        | `backend/include/auth/`         | `AuthService`, `Session`, `AliasService` |
 | `player`      | `backend/include/player/`       | `PlayerProfile`, `Inventory` |
 | `payment`     | `backend/include/payment/`      | `Wallet`, `PaymentService`, `Store` |
-| `persistence` | `backend/include/persistence/`  | `Database`, `UserRepository`, `PlayerRepository`, `WalletRepository`, `TransactionRepository` |
+| `persistence` | `backend/include/persistence/`  | `Database`, `UserRepository`, `PlayerProfileRepository`, `LeaderboardRepository`, wallet, store, and inventory repositories |
 | `common`      | `backend/include/common/`       | `Types`, `Enums`, `Results` |
 
-All headers above are currently empty/minimal placeholders (repository
-initialization phase) — see the `TODO` comment at the top of each file for
-which development day introduces its real content.
+Gameplay modules provide playable characters, enemies, physics, collision, combat, and Fighting/Running/Flappy mode logic. GameManager selects a mode and exposes a render-ready shared::GameState through GameAPI. The frontend still owns key polling, drawing, sound, and animation.
 
 ## Data Flow
 
@@ -70,34 +68,26 @@ Never `Frontend → SQLite` and never `Frontend → internal backend classes`.
 
 ## GameAPI
 
-`shared/include/shared/GameAPI.h` is the single entry point the frontend
-is allowed to call through. See [`API_CONTRACT.md`](API_CONTRACT.md) for
-the full contract. It is a design contract at this stage — not every
-method needs a real implementation until the day that introduces it (see
-`DEVELOPMENT_PLAN.md`).
+`shared/include/shared/GameAPI.h` is the only frontend boundary. It exposes controls, gameplay snapshots, store items, and cosmetic ownership/equipping without exposing SQLite or internal service classes.
 
 ## OOP Architecture
 
 - **Encapsulation** — e.g. `Wallet` will keep its balance private behind
   `getBalance()` / `spend()` / `addFunds()`.
-- **Inheritance** — `GameMode` is an abstract base with `initialize()`,
-  `update(dt)`, `handleAction(action)`, `isFinished()`; `FightingMode`,
-  `RunningMode`, `FlappyMode` derive from it.
+- **Inheritance**: `GameMode` is an abstract base with `start()`, `update(dt)`, `handleAction(action)`, and `finished()`; `FightingMode`, `RunningMode`, and `FlappyMode` derive from it.
 - **Polymorphism** — the core holds a `std::unique_ptr<GameMode> currentMode`
   and dispatches through the base interface.
 - **Abstraction** — services (`AuthService`, `PaymentService`,
-  `PlayerRepository`, `WalletRepository`) hide their implementation
+  `PlayerProfileRepository`, `WalletRepository`) hide their implementation
   details behind interfaces.
 - **Composition** — smaller systems are composed together rather than
   forced into unnecessary inheritance hierarchies.
 
 ## Dependency Boundaries
 
-- `shared` — header-only, zero third-party dependencies. Both backend and
-  frontend depend on it; it depends on neither.
-- `backend` — depends only on `shared` at this stage. Future systems will
-  add SQLite, libsodium, nlohmann/json, and spdlog — **never SFML**.
-- `frontend` — depends on `shared` and SFML 3. Never depends on backend
-  internals directly, only through `GameAPI`.
-- `tests` — depends on `backend` and Catch2. Must never require an SFML
-  window/context to run (see `DEVELOPMENT_PLAN.md`, "Testing Strategy").
+- `shared` is header-only and has no third-party dependencies.
+- `backend` depends on `shared` and configured persistence/security libraries. It never depends on SFML.
+- `frontend` depends on `shared` and SFML 3. It never accesses repositories or wallet internals.
+- `tests` use Catch2 and run without an SFML window.
+
+Cosmetic ownership lives in the store inventory. GameAPI returns catalog entries with ownership flags and accepts equip requests only for the built-in skin or purchased skins. GameState exposes the selected item ID; the frontend maps it to the catalog resourceKey. Cosmetics are optional and do not affect game rules.

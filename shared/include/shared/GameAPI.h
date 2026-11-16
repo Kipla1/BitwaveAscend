@@ -1,17 +1,6 @@
 #pragma once
 
-// GameAPI — the ONLY boundary the frontend is allowed to call through.
-//
-//   Frontend --> GameAPI --> Backend Systems --> Persistence
-//
-// Never:
-//   Frontend --> SQLite
-//   Frontend --> internal backend classes (AuthService, Wallet, repositories, ...)
-//
-// This header documents the intended contract for Day 2+. It is a design
-// contract at the repository-initialization stage, not a requirement that
-// every function be implemented yet.
-
+#include <cstddef>
 #include <string>
 #include <vector>
 #include <optional>
@@ -33,10 +22,13 @@ public:
     virtual void logout() = 0;
 
     virtual std::optional<PlayerProfile> getProfile() = 0;
+    virtual bool setAlias(const std::string& alias) = 0;
+    virtual std::vector<LeaderboardEntry> getLeaderboard(std::size_t limit = 10) = 0;
 
-    virtual void startMode(GameModeType mode) = 0;
+    virtual void startMode(GameModeType mode, Difficulty difficulty = Difficulty::Medium) = 0;
 
-    virtual void handleAction(PlayerAction action) = 0;
+    // Pass false when a movement key is released.
+    virtual void handleAction(PlayerAction action, bool pressed = true) = 0;
 
     virtual void update(float deltaTime) = 0;
 
@@ -46,7 +38,9 @@ public:
 
     virtual std::vector<StoreItem> getStoreItems() = 0;
 
-    virtual PurchaseResult purchaseItem(int itemId) = 0;
+    virtual PurchaseResult purchaseItem(std::int64_t itemId) = 0;
+    virtual std::vector<CosmeticItem> getCosmetics() = 0;
+    virtual bool equipCosmetic(std::int64_t itemId) = 0;
 };
 
 } // namespace bitwave::shared

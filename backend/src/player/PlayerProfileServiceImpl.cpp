@@ -22,6 +22,7 @@ std::optional<shared::PlayerProfile> PlayerProfileServiceImpl::getCurrentProfile
     profile.alias = user.alias;
     profile.highestScore = record->highestScore;
     profile.currentLevel = record->currentLevel;
+    profile.equippedSkinId = record->equippedSkinId;
     return profile;
 }
 
@@ -33,6 +34,11 @@ void PlayerProfileServiceImpl::reportScore(long long score) {
 void PlayerProfileServiceImpl::setLevel(int level) {
     if (!session_.isActive()) return;
     progress_.updateLevel(session_.user()->id, level);
+}
+
+void PlayerProfileServiceImpl::setEquippedSkin(std::int64_t itemId) {
+    if (!session_.isActive()) return;
+    progress_.updateEquippedSkin(session_.user()->id, itemId);
 }
 
 } // namespace bitwave::player

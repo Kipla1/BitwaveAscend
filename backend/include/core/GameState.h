@@ -1,12 +1,10 @@
 #pragma once
 
-// GameState
-// TODO(Day 2): Define the GameState interface.
-// This is an intentionally empty placeholder created during repository
-// initialization. Do not implement logic here yet.
+#include "shared/Contracts.h"
 
 namespace bitwave::core {
 
-// class GameState { };
+// Share the frontend snapshot type rather than copying it.
+using GameState = shared::GameState;
 
 } // namespace bitwave::core

@@ -19,6 +19,15 @@ Statement prepare(sqlite3* db, const char* sql) {
     return Statement(raw, &sqlite3_finalize);
 }
 
+bool hasColumn(sqlite3* db, const char* name) {
+    auto stmt=prepare(db,"PRAGMA table_info(player_progress);");
+    while (sqlite3_step(stmt.get())==SQLITE_ROW) {
+        const auto* text=sqlite3_column_text(stmt.get(),1);
+        if (text && std::string(reinterpret_cast<const char*>(text))==name) return true;
+    }
+    return false;
+}
+
 } // namespace
 
 SqlitePlayerProfileRepository::SqlitePlayerProfileRepository(Database& db) : db_(db) {
@@ -26,8 +35,11 @@ SqlitePlayerProfileRepository::SqlitePlayerProfileRepository(Database& db) : db_
         "CREATE TABLE IF NOT EXISTS player_progress ("
         "  user_id        INTEGER PRIMARY KEY REFERENCES users(id),"
         "  highest_score  INTEGER NOT NULL DEFAULT 0,"
-        "  current_level  INTEGER NOT NULL DEFAULT 0"
+        "  current_level  INTEGER NOT NULL DEFAULT 0,"
+        "  equipped_skin_id INTEGER NOT NULL DEFAULT 0"
         ");");
+    if (!hasColumn(db_.handle(),"equipped_skin_id"))
+        db_.execute("ALTER TABLE player_progress ADD COLUMN equipped_skin_id INTEGER NOT NULL DEFAULT 0;");
 }
 
 void SqlitePlayerProfileRepository::create(std::int64_t userId) {
@@ -43,7 +55,7 @@ void SqlitePlayerProfileRepository::create(std::int64_t userId) {
 
 std::optional<ProgressRecord> SqlitePlayerProfileRepository::find(std::int64_t userId) const {
     auto stmt = prepare(db_.handle(),
-        "SELECT highest_score, current_level FROM player_progress WHERE user_id = ?;");
+        "SELECT highest_score, current_level, equipped_skin_id FROM player_progress WHERE user_id = ?;");
     sqlite3_bind_int64(stmt.get(), 1, userId);
 
     if (sqlite3_step(stmt.get()) != SQLITE_ROW) {
@@ -53,6 +65,7 @@ std::optional<ProgressRecord> SqlitePlayerProfileRepository::find(std::int64_t u
     ProgressRecord record;
     record.highestScore = sqlite3_column_int64(stmt.get(), 0);
     record.currentLevel = sqlite3_column_int(stmt.get(), 1);
+    record.equippedSkinId = sqlite3_column_int64(stmt.get(), 2);
     return record;
 }
 
@@ -82,6 +95,17 @@ void SqlitePlayerProfileRepository::updateLevel(std::int64_t userId, int level) 
         throw std::runtime_error(std::string("Could not update level: ") +
                                  sqlite3_errmsg(db_.handle()));
     }
+}
+
+void SqlitePlayerProfileRepository::updateEquippedSkin(std::int64_t userId,
+                                                        std::int64_t itemId) {
+    auto stmt=prepare(db_.handle(),
+        "UPDATE player_progress SET equipped_skin_id = ? WHERE user_id = ?;");
+    sqlite3_bind_int64(stmt.get(),1,itemId);
+    sqlite3_bind_int64(stmt.get(),2,userId);
+    if (sqlite3_step(stmt.get())!=SQLITE_DONE)
+        throw std::runtime_error(std::string("Could not save equipped skin: ")+
+                                 sqlite3_errmsg(db_.handle()));
 }
 
 } // namespace bitwave::persistence

@@ -37,26 +37,28 @@ shared::PurchaseResult PaymentServiceImpl::purchaseItem(std::int64_t itemId) {
         return failure("That item does not exist.");
     }
 
-    db_.beginTransaction();
-
-    if (!wallet_.spend(item->price)) {
-        db_.rollbackTransaction();
-        return failure("Insufficient funds.");
+    if (item->kind == shared::StoreItemKind::Cosmetic) {
+        if (item->price == 0)
+            return failure("Free cosmetics can be equipped without purchase.");
+        for (const auto& owned : inventory_.listItems())
+            if (owned.itemId == itemId && owned.quantity > 0)
+                return failure("You already own this cosmetic.");
     }
 
+    db_.beginTransaction();
     try {
+        if (!wallet_.spend(item->price)) {
+            db_.rollbackTransaction();
+            return failure("Insufficient funds.");
+        }
         inventory_.addItem(itemId, 1);
         transactions_.record(session_.user()->id, itemId, item->price,
                              persistence::TransactionStatus::Succeeded);
+        db_.commitTransaction();
     } catch (...) {
-        // Something unexpected failed mid-purchase (e.g. a database error).
-        // Undo the wallet debit along with everything else, then let the
-        // caller see the real error rather than silently losing it.
-        db_.rollbackTransaction();
+        try { db_.rollbackTransaction(); } catch (...) {}
         throw;
     }
-
-    db_.commitTransaction();
 
     shared::PurchaseResult result;
     result.success = true;

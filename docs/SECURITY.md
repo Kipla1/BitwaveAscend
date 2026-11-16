@@ -1,8 +1,6 @@
 # Security
 
-Requirements the backend must satisfy once the relevant systems are
-implemented (Day 3+). Not implemented yet — repository initialization
-only declares the requirements.
+Security rules for implemented backend services and future additions.
 
 ## Password Hashing
 
@@ -30,14 +28,17 @@ only declares the requirements.
 
 ## SQL Parameterization
 
+Cosmetic purchases use virtual game currency only. The built-in skin is always
+free; `equipCosmetic` checks inventory before equipping paid skins. This code
+does not handle card data or connect to an external payment provider.
+
 - All SQLite queries use parameterized statements (bound parameters), no
   string-concatenated SQL, to prevent SQL injection.
-- Only `backend/persistence/` repositories touch SQLite; nothing else in
+- Only repositories under `backend/src/persistence/` touch SQLite; nothing in
   the codebase issues SQL directly.
 
 ## Sensitive Data Handling
 
-- Never log passwords, password hashes, or other sensitive credentials
-  (see `spdlog` usage guidelines once logging is introduced).
+- Never log passwords, password hashes, or other sensitive credentials.
 - Local SQLite database files under `backend/data/` are git-ignored so a
   developer's real save data/credentials are never committed.

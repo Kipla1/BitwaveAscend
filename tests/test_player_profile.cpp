@@ -45,4 +45,8 @@ TEST_CASE("PlayerProfileService reflects registration and reported progress", "[
         profileService.setLevel(3);
         REQUIRE(profileService.getCurrentProfile()->currentLevel == 3);
     }
+    SECTION("equipped skin survives profile reads") {
+        profileService.setEquippedSkin(12);
+        REQUIRE(profileService.getCurrentProfile()->equippedSkinId == 12);
+    }
 }

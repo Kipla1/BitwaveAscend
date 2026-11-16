@@ -8,6 +8,7 @@ namespace bitwave::persistence {
 struct ProgressRecord {
     long long highestScore = 0;
     int       currentLevel = 0;
+    std::int64_t equippedSkinId = 0;
 };
 
 class PlayerProfileRepository {
@@ -22,6 +23,7 @@ public:
     virtual void updateHighestScore(std::int64_t userId, long long score) = 0;
 
     virtual void updateLevel(std::int64_t userId, int level) = 0;
+    virtual void updateEquippedSkin(std::int64_t userId, std::int64_t itemId) = 0;
 };
 
 } // namespace bitwave::persistence
