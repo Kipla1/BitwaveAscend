@@ -1,0 +1,15 @@
+compilation_database_dir: build
+diagrams:
+  oop_defense_diagram:
+    type: class
+    glob:
+      - src/**/*.cpp
+      - include/**/*.h
+      - include/**/*.hpp
+      - backend/**/*.cpp
+      - backend/**/*.h
+    exclude:
+      namespaces:
+        - std
+    generate_packages: true
+    generate_method_arguments: true

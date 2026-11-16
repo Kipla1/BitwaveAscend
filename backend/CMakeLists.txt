@@ -5,8 +5,9 @@
 # See docs/ARCHITECTURE.md.
 find_package(CURL REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
-find_package(sodium CONFIG REQUIRED)   # libsodium via vcpkg
-
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(sodium REQUIRED libsodium)
+include_directories(${sodium_INCLUDE_DIRS})
 add_library(bitwave_backend
     src/common/Version.cpp
     src/auth/PasswordHasher.cpp
@@ -43,7 +44,7 @@ target_link_libraries(bitwave_backend
     PUBLIC
         bitwave::shared
     PRIVATE
-        unofficial-sodium::sodium
+        ${sodium_LINK_LIBRARIES}
         CURL::libcurl
         nlohmann_json::nlohmann_json
 )
@@ -56,7 +57,7 @@ find_package(spdlog CONFIG REQUIRED)
 target_link_libraries(bitwave_backend 
     PRIVATE
         SQLite3::SQLite3
-        unofficial-sodium::sodium
+        ${sodium_LINK_LIBRARIES}
         nlohmann_json::nlohmann_json
         spdlog::spdlog
 )
