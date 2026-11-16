@@ -1,23 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-PIXEL PALS ADVENTURES: ULTIMATE CINEMATIC EDITION
-Includes intro video playback, custom track assignments (MP3 1 & MP3 9), 
-writable aliases, account log-in windows, and full custom control re-binding.
-
-    pip install pygame
-    python tiny.py
-
-CONTROLS
-    Arrows / WASD ..... Move / Steer
-    Z / Space / Up .... Jump (Hold for higher, tap for short hop)
-    Shift / X ......... Run / Fireball / Laser shoot
-    C / J ............. Punch / Combat Attack
-    K / W ............. Spin Kick (Airborne Special)
-    Esc / P ........... Pause
-    M ................. Mute
-    Enter / Space ..... Confirm in menus
-"""
+import sys, math, random, array, os, threading
+import requests
+import pygame
 import sys, math, random, array, os
 import pygame
 from pygame.locals import *
@@ -961,8 +946,8 @@ class Game:
         self.video_surf = None
         try:
             import cv2
-            if os.path.exists('video project.mp4'):
-                self.video_cap = cv2.VideoCapture('video project.mp4')
+            if os.path.exists('Video project.mp4'):
+                self.video_cap = cv2.VideoCapture('Video project.mp4')
         except ImportError:
             pass
 
@@ -995,6 +980,45 @@ class Game:
         self.cam, self.banner, self.death_timer, self.clear_t = 0.0, 150, 0, 0
         self.time_left, self.got, self.bonus = 180, 0, 0
         self.tick_acc = 0
+
+    def backend_login(self, username, password):
+        try:
+            res = requests.post("http://127.0.0.1:8000/api/auth", json={
+                "username": username,
+                "password": password,
+                "alias": self.alias
+            }, timeout=3)
+            if res.status_code == 200:
+                data = res.json()
+                self.username = data["username"]
+                self.alias = data["alias"]
+                self.coins = data["coins"]
+                self.score = max(self.score, data["high_score"])
+                self.unlocked = max(self.unlocked, data["unlocked_stage"])
+                self.unlocked_chars = data["unlocked_chars"]
+                self.logged_in = True
+                return True
+        except requests.RequestException:
+            pass
+        return False
+
+    def async_sync_progress(self):
+        """Syncs player progress in a background thread so the game never freezes"""
+        if not self.logged_in or self.username == "Guest":
+            return
+        payload = {
+            "username": self.username,
+            "coins": self.coins,
+            "score": self.score,
+            "unlocked_stage": self.unlocked,
+            "unlocked_chars": self.unlocked_chars
+        }
+        def worker():
+            try:
+                requests.post("http://127.0.0.1:8000/api/sync", json=payload, timeout=3)
+            except requests.RequestException:
+                pass
+        threading.Thread(target=worker, daemon=True).start()
 
     def goto(self, state, action=None):
         if self.next_state is None:
@@ -1079,6 +1103,9 @@ class Game:
                                 self.username = self.temp_user
                                 self.password = "•" * len(self.temp_pass)
                                 self.logged_in = True
+
+                                self.backend_login(self.temp_user, self.temp_pass)
+                                
                             self.active_input_modal = None
                             self.audio.play('ok')
                         else:
@@ -1166,6 +1193,8 @@ class Game:
                         self.coins -= d['price']
                         self.unlocked_chars[self.char] = True
                         self.audio.play('coin')
+
+                        self.async_sync_progress()
                     else:
                         self.audio.play('no')
             elif self.menu_i in (1, 2):
@@ -1308,6 +1337,7 @@ class Game:
             if pr.colliderect(pygame.Rect(c[0] - 5, c[1] - 6, 10, 12)):
                 lv.coins.remove(c); self.got += 1; self.score += 100; self.coins += 1
                 self.audio.play('coin'); self.burst(c[0], c[1], COL['yellow'], 6)
+                self.async_sync_progress()
         for sr in lv.spikes:
             if pr.colliderect(sr):
                 p.hurt(self, -p.facing)
@@ -1326,7 +1356,12 @@ class Game:
         if pr.colliderect(lv.flag_rect):
             self.bonus = max(0, self.time_left) * 15
             self.score += self.bonus
+            self.audio.play('flag')
+
             self.unlocked = max(self.unlocked, min(self.stage + 1, len(THEMES) - 1))
+
+            self.async_sync_progress()
+
             self.state, self.clear_t = 'clear', 0
             self.audio.stop_music(); self.audio.play('win')
             self.confetti = [[random.uniform(0, W), random.uniform(-H, 0), random.uniform(.5, 1.6),
