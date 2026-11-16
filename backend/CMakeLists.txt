@@ -44,6 +44,7 @@ add_library(bitwave_backend
     src/payment/TopUpServiceImpl.cpp
     src/payment/CurlHttpClient.cpp
     src/payment/PaystackGateway.cpp
+    src/persistence/SqliteAdminRepository.cpp
 )
 add_library(bitwave::backend ALIAS bitwave_backend)
 
@@ -76,6 +77,12 @@ target_link_libraries(bitwave_backend
 
 add_executable(paystack_smoke tools/paystack_smoke.cpp)
 target_link_libraries(paystack_smoke PRIVATE bitwave_backend)
+
+add_executable(db_smoke tools/db_smoke.cpp)
+target_link_libraries(db_smoke PRIVATE bitwave_backend)
+
+add_executable(admin_cli tools/admin_cli.cpp)
+target_link_libraries(admin_cli PRIVATE bitwave_backend)
 # Intentionally not linked yet: nothing in backend/ uses them during
 # repository initialization, and CMake will warn/fail on unused
 # find_package() calls in some configurations.
