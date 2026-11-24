@@ -40,6 +40,7 @@ td strong{color:#f8fafc}td small{font-size:11px;color:#64748b}
 button{font-size:12px;font-weight:600;cursor:pointer;border:0;border-radius:6px;padding:6px 12px}
 .btn-cyan{background:#0284c7;color:#fff}.btn-danger{background:#7f1d1d;color:#fca5a5}.btn-success{background:#065f46;color:#6ee7b7}
 .btn-save{background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;padding:10px 20px}
+.btn-edit{background:#1e293b;color:#cbd5e1}
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
 .chip{background:#1e293b;color:#94a3b8;padding:8px 14px}.chip.on{background:#0284c7;color:#fff}
 textarea{width:100%;min-height:90px;background:#0b0f19;border:1px solid #334155;border-radius:6px;padding:10px;color:#f8fafc;font:13px ui-monospace,Menlo,monospace;margin-bottom:12px}
@@ -56,7 +57,7 @@ button:disabled{opacity:.4;cursor:default}
 </div></div>
 <script>
 // All data comes from server.py. Same origin, so relative URLs need no CORS setup.
-const S={tab:'dashboard',players:[],cfg:{},log:'',err:'',db:{tables:[],sel:null,cols:[],rows:[],total:0,offset:0,q:'',qres:null}};
+const S={tab:'dashboard',players:[],cfg:{},log:'',err:'',form:null,db:{tables:[],sel:null,cols:[],rows:[],total:0,offset:0,q:'',qres:null}};
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 async function api(method,path,body){
@@ -86,14 +87,14 @@ function go(t){S.tab=t;if(t==='database')dbTables();else render()}
 const field=(k,label)=>`<div class="field"><label>${label||k.toUpperCase()}</label><input name="${k}" value="${esc(S.cfg[k]??'')}"></div>`;
 function dash(){
   const ps=S.players,coins=ps.reduce((a,p)=>a+p.coins,0),top=ps.reduce((m,p)=>Math.max(m,p.high_score),0);
-  const rows=ps.map(p=>`<tr><td class="m">#${p.id}</td><td><strong>${esc(p.username)}</strong><br><small>${esc(p.alias)}</small></td><td class="c">${p.coins} COINS</td><td class="g">${p.high_score} PTS</td><td>Stage ${p.unlocked_stage+1}</td><td><span class="badge ${p.is_banned?'bb':'ba'}">${p.is_banned?'SUSPENDED':'ACTIVE'}</span></td><td class="act"><button class="btn-cyan" onclick="grant(${p.id})">+50 Coins</button><button class="${p.is_banned?'btn-success':'btn-danger'}" onclick="toggle(${p.id})">${p.is_banned?'Unban':'Ban'}</button></td></tr>`).join('');
+  const rows=ps.map(p=>`<tr><td class="m">#${p.id}</td><td><strong>${esc(p.username)}</strong><br><small>${esc(p.alias)}</small></td><td class="c">${p.coins} COINS</td><td class="g">${p.high_score} PTS</td><td>Stage ${p.unlocked_stage+1}</td><td><span class="badge ${p.is_banned?'bb':'ba'}">${p.is_banned?'SUSPENDED':'ACTIVE'}</span></td><td class="act"><button class="btn-cyan" onclick="grant(${p.id})">+50 Coins</button><button class="btn-edit" onclick="openForm(${p.id})">Edit</button><button class="${p.is_banned?'btn-success':'btn-danger'}" onclick="toggle(${p.id})">${p.is_banned?'Unban':'Ban'}</button></td></tr>`).join('');
   return `<div class="grid3">
   <div class="card"><div class="mt">Total Active Players</div><div class="mv">${ps.length}</div></div>
   <div class="card"><div class="mt">Circulating Coin Economy</div><div class="mv c">${coins}</div></div>
   <div class="card"><div class="mt">Global High Score Peak</div><div class="mv g">${top}</div></div></div>
   <div class="panel"><div class="st">Live Gameplay Parameters</div>
   <form onsubmit="return save(event)"><div class="grid3 f">${['gravity','game_speed','enemy_spawn_rate'].map(k=>field(k)).join('')}</div><button class="btn-save">Save Configurations</button></form></div>
-  <div class="panel"><div class="st">Player Leaderboard &amp; Moderation</div>
+  ${playerForm()}<div class="panel"><div class="st" style="display:flex;justify-content:space-between;align-items:center">Player Leaderboard &amp; Moderation<button class="btn-save" onclick="openForm()">Add Player</button></div>
   <div class="tw"><table><thead><tr><th>ID</th><th>Player / Alias</th><th>Balance</th><th>High Score</th><th>Stage Progress</th><th>Status</th><th>Actions</th></tr></thead><tbody>${rows||'<tr><td colspan="7" class="empty">No players registered yet. Register one via /docs or the game client.</td></tr>'}</tbody></table></div></div>`}
 function sec(){
   const b=S.players.filter(p=>p.is_banned),on=S.cfg.maintenance_mode==='on';
@@ -106,6 +107,33 @@ function sec(){
   <form onsubmit="return save(event)"><div class="grid3 f">${field('maintenance_mode','MAINTENANCE MODE (on / off)')}${field('max_login_attempts','MAX LOGIN ATTEMPTS')}${field('min_password_length','MIN PASSWORD LENGTH')}</div><button class="btn-save">Update Security Policies</button></form></div>
   <div class="panel"><div class="st">Banned / Suspended Accounts Audit</div>
   <div class="tw"><table><thead><tr><th>ID</th><th>Username</th><th>Status</th><th>Actions</th></tr></thead><tbody>${rows||'<tr><td colspan="4" class="empty">No suspended accounts. All players are active!</td></tr>'}</tbody></table></div></div>`}
+// ---- Player add / edit ----
+function openForm(id){
+  const p=S.players.find(p=>p.id===id);
+  S.form=p?{mode:'edit',id:p.id,username:p.username,alias:p.alias,coins:p.coins,high_score:p.high_score}
+          :{mode:'add',username:'',password:'',alias:'PixelHero',coins:0,high_score:0};
+  render();
+}
+function closeForm(){S.form=null;render()}
+async function submitForm(e){
+  e.preventDefault();
+  const F=S.form,f=Object.fromEntries(new FormData(e.target));
+  f.coins=parseInt(f.coins,10);f.high_score=parseInt(f.high_score,10);
+  Object.assign(F,f);                       // keep what was typed if the server rejects it
+  if(Number.isNaN(f.coins)||Number.isNaN(f.high_score)){S.err='Coins and high score must be whole numbers';render();return false}
+  if(F.mode==='edit')f.user_id=F.id;
+  const r=await api('POST',F.mode==='edit'?'/api/admin/player/update':'/api/admin/player/create',f);
+  if(r)S.form=null;
+  const l=S.log,er=S.err;await load();S.log=l+'  then GET /api/admin/state';S.err=er;render();
+  return false;
+}
+function playerForm(){
+  const F=S.form;if(!F)return '';
+  const inp=(n,label,type='text')=>`<div class="field"><label>${label}</label><input name="${n}" type="${type}" value="${esc(F[n]??'')}" ${type==='number'?'min="0" step="1"':''} required></div>`;
+  return `<div class="panel"><div class="st">${F.mode==='edit'?'Edit player #'+F.id:'Add player'}</div>
+  <form onsubmit="return submitForm(event)"><div class="grid3 f">${inp('username','USERNAME')}${F.mode==='add'?inp('password','PASSWORD','password'):''}${inp('alias','ALIAS')}${inp('coins','COINS','number')}${inp('high_score','HIGH SCORE','number')}</div>
+  <button class="btn-save">${F.mode==='edit'?'Save Changes':'Create Player'}</button> <button type="button" class="btn-edit" style="padding:10px 20px" onclick="closeForm()">Cancel</button></form></div>`}
+
 // ---- Database section ----
 async function dbTables(){
   const d=await api('GET','/api/admin/db/tables');

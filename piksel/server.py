@@ -550,3 +550,60 @@ def db_query(data: SqlQuery):
             raise HTTPException(status_code=400, detail=str(e))
         cols = [d[0] for d in cur.description] if cur.description else []
     return {"columns": cols, "rows": [list(r) for r in rows]}
+
+# --- Player add / edit API ---
+class PlayerNew(BaseModel):
+    username: str
+    password: str
+    alias: str = "PixelHero"
+    coins: int = 0
+    high_score: int = 0
+
+class PlayerEdit(BaseModel):
+    user_id: int
+    username: str
+    alias: str
+    coins: int
+    high_score: int
+
+def _validate_player(username, alias, coins, high_score):
+    if not username.strip() or not alias.strip():
+        raise HTTPException(status_code=400, detail="Username and alias cannot be empty")
+    if coins < 0 or high_score < 0:
+        raise HTTPException(status_code=400, detail="Coins and high score cannot be negative")
+
+@app.post("/api/admin/player/create")
+def api_create_player(data: PlayerNew):
+    _validate_player(data.username, data.alias, data.coins, data.high_score)
+    with get_db() as db:
+        cfg = {r["key"]: r["value"] for r in db.execute("SELECT * FROM config").fetchall()}
+        min_len = int(cfg.get("min_password_length", 6))
+        if len(data.password) < min_len:
+            raise HTTPException(status_code=400, detail=f"Password must be at least {min_len} characters")
+        try:
+            cur = db.execute(
+                "INSERT INTO users (username, password_hash, alias) VALUES (?, ?, ?)",
+                (data.username.strip(), hash_pw(data.password), data.alias.strip()))
+            db.execute(
+                "INSERT INTO progress (user_id, coins, high_score) VALUES (?, ?, ?)",
+                (cur.lastrowid, data.coins, data.high_score))
+        except sqlite3.IntegrityError:
+            raise HTTPException(status_code=409, detail="Username already taken")
+        db.commit()
+    return {"status": "ok"}
+
+@app.post("/api/admin/player/update")
+def api_update_player(data: PlayerEdit):
+    _validate_player(data.username, data.alias, data.coins, data.high_score)
+    with get_db() as db:
+        try:
+            cur = db.execute("UPDATE users SET username = ?, alias = ? WHERE id = ?",
+                             (data.username.strip(), data.alias.strip(), data.user_id))
+            if cur.rowcount == 0:
+                raise HTTPException(status_code=404, detail="Player not found")
+            db.execute("UPDATE progress SET coins = ?, high_score = ? WHERE user_id = ?",
+                       (data.coins, data.high_score, data.user_id))
+        except sqlite3.IntegrityError:
+            raise HTTPException(status_code=409, detail="Username already taken")
+        db.commit()
+    return {"status": "ok"}
