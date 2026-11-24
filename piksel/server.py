@@ -468,3 +468,85 @@ def api_config(data: ConfigPayload):
             db.execute("UPDATE config SET value = ? WHERE key = ?", (v, k))
         db.commit()
     return {"status": "ok"}
+
+# --- Database browser API ---
+class CellUpdate(BaseModel):
+    table: str
+    rowid: int
+    column: str
+    value: str
+
+class RowRef(BaseModel):
+    table: str
+    rowid: int
+
+class SqlQuery(BaseModel):
+    sql: str
+
+def _tables(db):
+    return [r["name"] for r in db.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name")]
+
+def _check_table(db, table):
+    if table not in _tables(db):
+        raise HTTPException(status_code=404, detail="Unknown table")
+
+def _columns(db, table):
+    return [r["name"] for r in db.execute(f'PRAGMA table_info("{table}")')]
+
+@app.get("/api/admin/db/tables")
+def db_tables():
+    with get_db() as db:
+        return [{"name": t, "rows": db.execute(f'SELECT COUNT(*) FROM "{t}"').fetchone()[0]}
+                for t in _tables(db)]
+
+@app.get("/api/admin/db/table/{name}")
+def db_table(name: str, limit: int = 25, offset: int = 0):
+    limit = max(1, min(limit, 100))
+    with get_db() as db:
+        _check_table(db, name)
+        cols = _columns(db, name)
+        rows = db.execute(f'SELECT rowid AS __rid, * FROM "{name}" LIMIT ? OFFSET ?',
+                          (limit, max(0, offset))).fetchall()
+        total = db.execute(f'SELECT COUNT(*) FROM "{name}"').fetchone()[0]
+    return {"columns": cols, "rows": [dict(r) for r in rows], "total": total}
+
+@app.post("/api/admin/db/update")
+def db_update(data: CellUpdate):
+    with get_db() as db:
+        _check_table(db, data.table)
+        if data.column not in _columns(db, data.table):
+            raise HTTPException(status_code=400, detail="Unknown column")
+        try:
+            cur = db.execute(f'UPDATE "{data.table}" SET "{data.column}" = ? WHERE rowid = ?',
+                             (data.value, data.rowid))
+        except sqlite3.Error as e:
+            raise HTTPException(status_code=400, detail=str(e))
+        db.commit()
+    if cur.rowcount == 0:
+        raise HTTPException(status_code=404, detail="Row not found")
+    return {"status": "ok"}
+
+@app.post("/api/admin/db/delete")
+def db_delete(data: RowRef):
+    with get_db() as db:
+        _check_table(db, data.table)
+        cur = db.execute(f'DELETE FROM "{data.table}" WHERE rowid = ?', (data.rowid,))
+        db.commit()
+    if cur.rowcount == 0:
+        raise HTTPException(status_code=404, detail="Row not found")
+    return {"status": "ok"}
+
+@app.post("/api/admin/db/query")
+def db_query(data: SqlQuery):
+    if not data.sql.lstrip().lower().startswith(("select", "with")):
+        raise HTTPException(status_code=400, detail="Only SELECT queries are allowed")
+    with get_db() as db:
+        db.execute("PRAGMA query_only = ON")
+        try:
+            cur = db.execute(data.sql)
+            rows = cur.fetchmany(200)
+        except sqlite3.Error as e:
+            raise HTTPException(status_code=400, detail=str(e))
+        cols = [d[0] for d in cur.description] if cur.description else []
+    return {"columns": cols, "rows": [list(r) for r in rows]}

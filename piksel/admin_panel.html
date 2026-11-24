@@ -40,6 +40,12 @@ td strong{color:#f8fafc}td small{font-size:11px;color:#64748b}
 button{font-size:12px;font-weight:600;cursor:pointer;border:0;border-radius:6px;padding:6px 12px}
 .btn-cyan{background:#0284c7;color:#fff}.btn-danger{background:#7f1d1d;color:#fca5a5}.btn-success{background:#065f46;color:#6ee7b7}
 .btn-save{background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;padding:10px 20px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.chip{background:#1e293b;color:#94a3b8;padding:8px 14px}.chip.on{background:#0284c7;color:#fff}
+textarea{width:100%;min-height:90px;background:#0b0f19;border:1px solid #334155;border-radius:6px;padding:10px;color:#f8fafc;font:13px ui-monospace,Menlo,monospace;margin-bottom:12px}
+.cell{cursor:pointer;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cell:hover{outline:1px dashed #38bdf8}
+.pager{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:12px}
+button:disabled{opacity:.4;cursor:default}
 @media(max-width:760px){body{flex-direction:column;overflow:auto}.sidebar{width:100%;padding:14px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}.brand{margin:0 10px 0 0}.nav{width:auto;margin:0}.main{overflow:visible}.grid3{grid-template-columns:1fr}.body{padding:16px}}
 </style>
 </head>
@@ -50,7 +56,7 @@ button{font-size:12px;font-weight:600;cursor:pointer;border:0;border-radius:6px;
 </div></div>
 <script>
 // All data comes from server.py. Same origin, so relative URLs need no CORS setup.
-const S={tab:'dashboard',players:[],cfg:{},log:'',err:''};
+const S={tab:'dashboard',players:[],cfg:{},log:'',err:'',db:{tables:[],sel:null,cols:[],rows:[],total:0,offset:0,q:'',qres:null}};
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 async function api(method,path,body){
@@ -75,7 +81,7 @@ async function act(path,body){            // do the action, then re-fetch: the s
 const grant=id=>act('/api/admin/grant_coins',{user_id:id});
 const toggle=id=>act('/api/admin/toggle_ban',{user_id:id});
 function save(e){e.preventDefault();const values={};new FormData(e.target).forEach((v,k)=>values[k]=String(v));act('/api/admin/config',{values});return false}
-function go(t){S.tab=t;render()}
+function go(t){S.tab=t;if(t==='database')dbTables();else render()}
 
 const field=(k,label)=>`<div class="field"><label>${label||k.toUpperCase()}</label><input name="${k}" value="${esc(S.cfg[k]??'')}"></div>`;
 function dash(){
@@ -83,11 +89,11 @@ function dash(){
   const rows=ps.map(p=>`<tr><td class="m">#${p.id}</td><td><strong>${esc(p.username)}</strong><br><small>${esc(p.alias)}</small></td><td class="c">${p.coins} COINS</td><td class="g">${p.high_score} PTS</td><td>Stage ${p.unlocked_stage+1}</td><td><span class="badge ${p.is_banned?'bb':'ba'}">${p.is_banned?'SUSPENDED':'ACTIVE'}</span></td><td class="act"><button class="btn-cyan" onclick="grant(${p.id})">+50 Coins</button><button class="${p.is_banned?'btn-success':'btn-danger'}" onclick="toggle(${p.id})">${p.is_banned?'Unban':'Ban'}</button></td></tr>`).join('');
   return `<div class="grid3">
   <div class="card"><div class="mt">Total Active Players</div><div class="mv">${ps.length}</div></div>
-  <div class="card"><div class="mt">Circulating Coin Economy</div><div class="mv c">${coins} 🪙</div></div>
-  <div class="card"><div class="mt">Global High Score Peak</div><div class="mv g">${top} 🏆</div></div></div>
-  <div class="panel"><div class="st">⚙️ Live Gameplay Parameters</div>
+  <div class="card"><div class="mt">Circulating Coin Economy</div><div class="mv c">${coins}</div></div>
+  <div class="card"><div class="mt">Global High Score Peak</div><div class="mv g">${top}</div></div></div>
+  <div class="panel"><div class="st">Live Gameplay Parameters</div>
   <form onsubmit="return save(event)"><div class="grid3 f">${['gravity','game_speed','enemy_spawn_rate'].map(k=>field(k)).join('')}</div><button class="btn-save">Save Configurations</button></form></div>
-  <div class="panel"><div class="st">🏆 Player Leaderboard &amp; Moderation</div>
+  <div class="panel"><div class="st">Player Leaderboard &amp; Moderation</div>
   <div class="tw"><table><thead><tr><th>ID</th><th>Player / Alias</th><th>Balance</th><th>High Score</th><th>Stage Progress</th><th>Status</th><th>Actions</th></tr></thead><tbody>${rows||'<tr><td colspan="7" class="empty">No players registered yet. Register one via /docs or the game client.</td></tr>'}</tbody></table></div></div>`}
 function sec(){
   const b=S.players.filter(p=>p.is_banned),on=S.cfg.maintenance_mode==='on';
@@ -96,17 +102,65 @@ function sec(){
   <div class="card"><div class="mt">Suspended Accounts</div><div class="mv" style="color:#f87171">${b.length}</div></div>
   <div class="card"><div class="mt">Maintenance Status</div><div class="mv" style="color:${on?'#f87171':'#34d399'}">${esc(S.cfg.maintenance_mode??'off').toUpperCase()}</div></div>
   <div class="card"><div class="mt">Min Password Length</div><div class="mv c">${esc(S.cfg.min_password_length??'6')} Chars</div></div></div>
-  <div class="panel"><div class="st">🔒 Security &amp; Authentication Policies</div>
+  <div class="panel"><div class="st">Security &amp; Authentication Policies</div>
   <form onsubmit="return save(event)"><div class="grid3 f">${field('maintenance_mode','MAINTENANCE MODE (on / off)')}${field('max_login_attempts','MAX LOGIN ATTEMPTS')}${field('min_password_length','MIN PASSWORD LENGTH')}</div><button class="btn-save">Update Security Policies</button></form></div>
-  <div class="panel"><div class="st">🚨 Banned / Suspended Accounts Audit</div>
+  <div class="panel"><div class="st">Banned / Suspended Accounts Audit</div>
   <div class="tw"><table><thead><tr><th>ID</th><th>Username</th><th>Status</th><th>Actions</th></tr></thead><tbody>${rows||'<tr><td colspan="4" class="empty">No suspended accounts. All players are active!</td></tr>'}</tbody></table></div></div>`}
+// ---- Database section ----
+async function dbTables(){
+  const d=await api('GET','/api/admin/db/tables');
+  if(d){S.db.tables=d;if(!S.db.sel&&d.length)S.db.sel=d[0].name}
+  await dbRows();
+}
+async function dbRows(){
+  const D=S.db;
+  if(!D.sel){render();return}
+  const d=await api('GET',`/api/admin/db/table/${encodeURIComponent(D.sel)}?limit=25&offset=${D.offset}`);
+  if(d){D.cols=d.columns;D.rows=d.rows;D.total=d.total}
+  render();
+}
+const pick=n=>{S.db.sel=n;S.db.offset=0;dbRows()};
+const page=dir=>{S.db.offset=Math.max(0,S.db.offset+dir*25);dbRows()};
+async function dbAct(path,body){          // write, then reload the table so the screen matches the DB
+  await api('POST',path,body);
+  const l=S.log,e=S.err;
+  await dbTables();
+  S.log=l+'  then GET table';S.err=e;render();
+}
+function editCell(rid,col){
+  const row=S.db.rows.find(r=>r.__rid==rid),old=row[col]===null?'':String(row[col]);
+  const v=prompt(`Edit ${S.db.sel}.${col} (row ${rid})`,old);
+  if(v===null||v===old)return;
+  dbAct('/api/admin/db/update',{table:S.db.sel,rowid:rid,column:col,value:v});
+}
+function delRow(rid){
+  if(!confirm(`Delete row ${rid} from ${S.db.sel}? This cannot be undone.`))return;
+  dbAct('/api/admin/db/delete',{table:S.db.sel,rowid:rid});
+}
+async function runSql(){
+  S.db.q=document.getElementById('sql').value;
+  S.db.qres=await api('POST','/api/admin/db/query',{sql:S.db.q});
+  render();
+}
+document.getElementById('view').addEventListener('click',e=>{const t=e.target.closest('.cell');if(t)editCell(t.dataset.r,t.dataset.c)});
+function dbview(){
+  const D=S.db,end=Math.min(D.offset+25,D.total),q=D.qres;
+  const chips=D.tables.map(t=>`<button class="chip ${t.name===D.sel?'on':''}" onclick="pick('${esc(t.name)}')">${esc(t.name)} (${t.rows})</button>`).join('');
+  const head=D.cols.map(c=>`<th>${esc(c)}</th>`).join('')+'<th></th>';
+  const body=D.rows.map(r=>`<tr>${D.cols.map(c=>`<td class="cell" data-r="${r.__rid}" data-c="${esc(c)}" title="Click to edit">${r[c]===null?'<span class="m">NULL</span>':esc(String(r[c]))}</td>`).join('')}<td><button class="btn-danger" onclick="delRow(${r.__rid})">Delete</button></td></tr>`).join('');
+  const qt=q?`<div class="tw" style="margin-top:16px"><table><thead><tr>${q.columns.map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${q.rows.map(r=>`<tr>${r.map(v=>`<td>${v===null?'NULL':esc(String(v))}</td>`).join('')}</tr>`).join('')||'<tr><td class="empty">No rows</td></tr>'}</tbody></table></div>`:'';
+  return `<div class="panel"><div class="st">Tables</div><div class="chips">${chips}</div>
+  <div class="tw"><table><thead><tr>${head}</tr></thead><tbody>${body||'<tr><td colspan="99" class="empty">No rows in this table.</td></tr>'}</tbody></table></div>
+  <div class="pager"><button onclick="page(-1)" ${D.offset?'':'disabled'}>Prev</button><span>${D.total?D.offset+1:0}-${end} of ${D.total}</span><button onclick="page(1)" ${end<D.total?'':'disabled'}>Next</button><span class="m">Click a cell to edit it.</span></div></div>
+  <div class="panel"><div class="st">Read-only SQL</div><textarea id="sql" placeholder="SELECT * FROM users LIMIT 10">${esc(D.q)}</textarea><button class="btn-save" onclick="runSql()">Run query</button>${qt}</div>`}
 function render(){
   document.getElementById('side').innerHTML=`<div class="brand">PIKSELPALS <span>ADMIN panel</span></div>
-  <button class="nav ${S.tab==='dashboard'?'active':''}" onclick="go('dashboard')">📊 Dashboard</button>
-  <button class="nav ${S.tab==='security'?'active':''}" onclick="go('security')">🔒 Security &amp; Bans</button>`;
+  <button class="nav ${S.tab==='dashboard'?'active':''}" onclick="go('dashboard')">Dashboard</button>
+  <button class="nav ${S.tab==='security'?'active':''}" onclick="go('security')">Security &amp; Bans</button>
+  <button class="nav ${S.tab==='database'?'active':''}" onclick="go('database')">Database</button>`;
   document.getElementById('log').textContent=S.log?'Last request: '+S.log:'';
   document.getElementById('err').textContent=S.err;
-  document.getElementById('view').innerHTML=S.tab==='security'?sec():dash();
+  document.getElementById('view').innerHTML=S.tab==='security'?sec():S.tab==='database'?dbview():dash();
 }
 load();
 </script>
