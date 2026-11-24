@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Piksel Pals // Admin Panel</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+html,body{height:100%}
+body{background:#0b0f19;color:#94a3b8;display:flex;overflow:hidden}
+.sidebar{width:230px;flex-shrink:0;background:#111827;border-right:1px solid #1f2937;padding:24px}
+.brand{font-size:15px;font-weight:700;color:#f8fafc;letter-spacing:1px;margin-bottom:28px}
+.brand span{color:#38bdf8}
+.nav{display:block;width:100%;text-align:left;background:none;border:0;padding:12px 16px;border-radius:8px;color:#94a3b8;font-size:14px;font-weight:500;margin-bottom:6px;cursor:pointer}
+.nav.active,.nav:hover{background:#1e293b;color:#38bdf8}
+.main{flex:1;min-width:0;overflow-y:auto}
+.body{padding:28px;max-width:1300px;margin:0 auto}
+.log{font:12px ui-monospace,Menlo,monospace;color:#64748b;margin-bottom:8px}
+.err{color:#f87171;font-size:13px;margin-bottom:14px;min-height:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:28px}
+.card,.panel{background:#111827;border:1px solid #1f2937;border-radius:12px;padding:22px}
+.panel{margin-bottom:28px}
+.mt{font-size:12px;font-weight:600;text-transform:uppercase;color:#64748b;letter-spacing:.5px;margin-bottom:8px}
+.mv{font-size:28px;font-weight:700;color:#f8fafc}
+.st{font-size:16px;font-weight:600;color:#f8fafc;margin-bottom:18px}
+.field label{display:block;font-size:11px;font-weight:600;color:#64748b;margin-bottom:6px}
+.field input{width:100%;background:#0b0f19;border:1px solid #334155;border-radius:6px;padding:10px;color:#f8fafc;font-size:14px}
+.grid3.f{margin-bottom:16px}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;text-align:left}
+th{font-size:11px;font-weight:600;text-transform:uppercase;color:#64748b;padding:12px 14px;border-bottom:1px solid #1f2937;white-space:nowrap}
+td{padding:14px;border-bottom:1px solid #1f2937;font-size:13px;color:#cbd5e1}
+tr:hover td{background:rgba(30,41,59,.4)}
+td strong{color:#f8fafc}td small{font-size:11px;color:#64748b}
+.c{color:#38bdf8;font-weight:600}.g{color:#facc15;font-weight:600}.m{color:#94a3b8}
+.act{display:flex;gap:6px}
+.empty{text-align:center;color:#64748b;padding:28px}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;text-transform:uppercase}
+.ba{background:rgba(16,185,129,.1);color:#34d399}.bb{background:rgba(239,68,68,.1);color:#f87171}
+button{font-size:12px;font-weight:600;cursor:pointer;border:0;border-radius:6px;padding:6px 12px}
+.btn-cyan{background:#0284c7;color:#fff}.btn-danger{background:#7f1d1d;color:#fca5a5}.btn-success{background:#065f46;color:#6ee7b7}
+.btn-save{background:linear-gradient(135deg,#38bdf8,#0284c7);color:#fff;padding:10px 20px}
+@media(max-width:760px){body{flex-direction:column;overflow:auto}.sidebar{width:100%;padding:14px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}.brand{margin:0 10px 0 0}.nav{width:auto;margin:0}.main{overflow:visible}.grid3{grid-template-columns:1fr}.body{padding:16px}}
+</style>
+</head>
+<body>
+<div class="sidebar" id="side"></div>
+<div class="main"><div class="body">
+  <div class="log" id="log"></div><div class="err" id="err"></div><div id="view"></div>
+</div></div>
+<script>
+// All data comes from server.py. Same origin, so relative URLs need no CORS setup.
+const S={tab:'dashboard',players:[],cfg:{},log:'',err:''};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+async function api(method,path,body){
+  try{
+    const r=await fetch(path,{method,headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});
+    S.log=`${method} ${path} → ${r.status}`;
+    if(!r.ok){const d=await r.json().catch(()=>({}));S.err=d.detail||('Request failed ('+r.status+')');return null}
+    S.err='';return await r.json();
+  }catch(e){S.log=`${method} ${path} → no response`;S.err='Cannot reach server.py. Is uvicorn running?';return null}
+}
+async function load(){
+  const d=await api('GET','/api/admin/state');
+  if(d){S.players=d.players;S.cfg=d.config}
+  render();
+}
+async function act(path,body){            // do the action, then re-fetch: the server stays the source of truth
+  await api('POST',path,body);
+  const done=S.log,err=S.err;
+  await load();
+  S.log=done+'  then GET /api/admin/state';S.err=err;render();
+}
+const grant=id=>act('/api/admin/grant_coins',{user_id:id});
+const toggle=id=>act('/api/admin/toggle_ban',{user_id:id});
+function save(e){e.preventDefault();const values={};new FormData(e.target).forEach((v,k)=>values[k]=String(v));act('/api/admin/config',{values});return false}
+function go(t){S.tab=t;render()}
+
+const field=(k,label)=>`<div class="field"><label>${label||k.toUpperCase()}</label><input name="${k}" value="${esc(S.cfg[k]??'')}"></div>`;
+function dash(){
+  const ps=S.players,coins=ps.reduce((a,p)=>a+p.coins,0),top=ps.reduce((m,p)=>Math.max(m,p.high_score),0);
+  const rows=ps.map(p=>`<tr><td class="m">#${p.id}</td><td><strong>${esc(p.username)}</strong><br><small>${esc(p.alias)}</small></td><td class="c">${p.coins} COINS</td><td class="g">${p.high_score} PTS</td><td>Stage ${p.unlocked_stage+1}</td><td><span class="badge ${p.is_banned?'bb':'ba'}">${p.is_banned?'SUSPENDED':'ACTIVE'}</span></td><td class="act"><button class="btn-cyan" onclick="grant(${p.id})">+50 Coins</button><button class="${p.is_banned?'btn-success':'btn-danger'}" onclick="toggle(${p.id})">${p.is_banned?'Unban':'Ban'}</button></td></tr>`).join('');
+  return `<div class="grid3">
+  <div class="card"><div class="mt">Total Active Players</div><div class="mv">${ps.length}</div></div>
+  <div class="card"><div class="mt">Circulating Coin Economy</div><div class="mv c">${coins} 🪙</div></div>
+  <div class="card"><div class="mt">Global High Score Peak</div><div class="mv g">${top} 🏆</div></div></div>
+  <div class="panel"><div class="st">⚙️ Live Gameplay Parameters</div>
+  <form onsubmit="return save(event)"><div class="grid3 f">${['gravity','game_speed','enemy_spawn_rate'].map(k=>field(k)).join('')}</div><button class="btn-save">Save Configurations</button></form></div>
+  <div class="panel"><div class="st">🏆 Player Leaderboard &amp; Moderation</div>
+  <div class="tw"><table><thead><tr><th>ID</th><th>Player / Alias</th><th>Balance</th><th>High Score</th><th>Stage Progress</th><th>Status</th><th>Actions</th></tr></thead><tbody>${rows||'<tr><td colspan="7" class="empty">No players registered yet. Register one via /docs or the game client.</td></tr>'}</tbody></table></div></div>`}
+function sec(){
+  const b=S.players.filter(p=>p.is_banned),on=S.cfg.maintenance_mode==='on';
+  const rows=b.map(p=>`<tr><td class="m">#${p.id}</td><td><strong>${esc(p.username)}</strong></td><td><span class="badge bb">SUSPENDED</span></td><td><button class="btn-success" onclick="toggle(${p.id})">Unban Player</button></td></tr>`).join('');
+  return `<div class="grid3">
+  <div class="card"><div class="mt">Suspended Accounts</div><div class="mv" style="color:#f87171">${b.length}</div></div>
+  <div class="card"><div class="mt">Maintenance Status</div><div class="mv" style="color:${on?'#f87171':'#34d399'}">${esc(S.cfg.maintenance_mode??'off').toUpperCase()}</div></div>
+  <div class="card"><div class="mt">Min Password Length</div><div class="mv c">${esc(S.cfg.min_password_length??'6')} Chars</div></div></div>
+  <div class="panel"><div class="st">🔒 Security &amp; Authentication Policies</div>
+  <form onsubmit="return save(event)"><div class="grid3 f">${field('maintenance_mode','MAINTENANCE MODE (on / off)')}${field('max_login_attempts','MAX LOGIN ATTEMPTS')}${field('min_password_length','MIN PASSWORD LENGTH')}</div><button class="btn-save">Update Security Policies</button></form></div>
+  <div class="panel"><div class="st">🚨 Banned / Suspended Accounts Audit</div>
+  <div class="tw"><table><thead><tr><th>ID</th><th>Username</th><th>Status</th><th>Actions</th></tr></thead><tbody>${rows||'<tr><td colspan="4" class="empty">No suspended accounts. All players are active!</td></tr>'}</tbody></table></div></div>`}
+function render(){
+  document.getElementById('side').innerHTML=`<div class="brand">PIKSELPALS <span>ADMIN panel</span></div>
+  <button class="nav ${S.tab==='dashboard'?'active':''}" onclick="go('dashboard')">📊 Dashboard</button>
+  <button class="nav ${S.tab==='security'?'active':''}" onclick="go('security')">🔒 Security &amp; Bans</button>`;
+  document.getElementById('log').textContent=S.log?'Last request: '+S.log:'';
+  document.getElementById('err').textContent=S.err;
+  document.getElementById('view').innerHTML=S.tab==='security'?sec():dash();
+}
+load();
+</script>
+</body>
+</html>
