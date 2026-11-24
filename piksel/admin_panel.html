@@ -47,6 +47,15 @@ textarea{width:100%;min-height:90px;background:#0b0f19;border:1px solid #334155;
 .cell{cursor:pointer;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cell:hover{outline:1px dashed #38bdf8}
 .pager{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:12px}
 button:disabled{opacity:.4;cursor:default}
+.sqlbox{position:relative;margin-bottom:12px}.sqlbox textarea{display:block;margin:0}
+#sug{display:none;position:absolute;left:0;right:0;top:100%;z-index:5;background:#111827;border:1px solid #334155;border-radius:6px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.45)}
+.sg{padding:7px 12px;font:13px ui-monospace,Menlo,monospace;color:#cbd5e1;cursor:pointer}.sg.on,.sg:hover{background:#1e293b;color:#38bdf8}
+.hgroup{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin:20px 0 10px}
+.hgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.hcard{background:#0b0f19;border:1px solid #1f2937;border-radius:8px;padding:12px;cursor:pointer}.hcard:hover{border-color:#38bdf8}
+.hcard b{display:block;color:#f8fafc;font-size:13px;margin-bottom:4px}.hcard p{font-size:12px;color:#94a3b8;margin-bottom:8px}
+.hcard code{display:block;font:11px ui-monospace,Menlo,monospace;color:#38bdf8;white-space:pre-wrap;word-break:break-word}
+@media(max-width:760px){.hgrid{grid-template-columns:1fr}}
 @media(max-width:760px){body{flex-direction:column;overflow:auto}.sidebar{width:100%;padding:14px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}.brand{margin:0 10px 0 0}.nav{width:auto;margin:0}.main{overflow:visible}.grid3{grid-template-columns:1fr}.body{padding:16px}}
 </style>
 </head>
@@ -57,7 +66,7 @@ button:disabled{opacity:.4;cursor:default}
 </div></div>
 <script>
 // All data comes from server.py. Same origin, so relative URLs need no CORS setup.
-const S={tab:'dashboard',players:[],cfg:{},log:'',err:'',form:null,db:{tables:[],sel:null,cols:[],rows:[],total:0,offset:0,q:'',qres:null}};
+const S={tab:'dashboard',players:[],cfg:{},log:'',err:'',form:null,db:{tables:[],schema:{},sel:null,cols:[],rows:[],total:0,offset:0,q:'',qres:null}};
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 async function api(method,path,body){
@@ -137,7 +146,7 @@ function playerForm(){
 // ---- Database section ----
 async function dbTables(){
   const d=await api('GET','/api/admin/db/tables');
-  if(d){S.db.tables=d;if(!S.db.sel&&d.length)S.db.sel=d[0].name}
+  if(d){S.db.tables=d;if(!S.db.sel&&d.length)S.db.sel=d[0].name;loadSchema()}
   await dbRows();
 }
 async function dbRows(){
@@ -171,8 +180,98 @@ async function runSql(){
   render();
 }
 document.getElementById('view').addEventListener('click',e=>{const t=e.target.closest('.cell');if(t)editCell(t.dataset.r,t.dataset.c)});
+// ---- SQL help + suggestions ----
+const HELP=[
+ ["Players",[
+  ["All players with progress","SELECT u.id, u.username, u.alias, p.coins, p.high_score FROM users u JOIN progress p ON u.id = p.user_id","JOIN glues each user to their scorecard through the shared id."],
+  ["Search by name","SELECT id, username, alias FROM users WHERE username LIKE '%a%'","LIKE with % matches any text around the letters you give."],
+  ["Banned players","SELECT id, username FROM users WHERE is_banned = 1","WHERE keeps only the rows that match the condition."],
+  ["Players per stage","SELECT unlocked_stage + 1 AS stage, COUNT(*) AS players FROM progress GROUP BY unlocked_stage","GROUP BY makes one row per stage and COUNT counts each group."]]],
+ ["Leaderboard and economy",[
+  ["Top 5 scores","SELECT u.username, p.high_score FROM users u JOIN progress p ON u.id = p.user_id ORDER BY p.high_score DESC LIMIT 5","ORDER BY ... DESC sorts biggest first and LIMIT keeps 5 rows."],
+  ["Richest players","SELECT u.username, p.coins FROM users u JOIN progress p ON u.id = p.user_id ORDER BY p.coins DESC LIMIT 5","Same pattern, sorted by coins."],
+  ["Economy totals","SELECT COUNT(*) AS players, SUM(coins) AS total_coins, AVG(high_score) AS avg_score, MAX(high_score) AS best FROM progress","Aggregates collapse many rows into one summary row."]]],
+ ["Health checks",[
+  ["Users with no progress row","SELECT u.id, u.username FROM users u LEFT JOIN progress p ON p.user_id = u.id WHERE p.user_id IS NULL","LEFT JOIN keeps unmatched users and IS NULL finds them. These players cannot log in."],
+  ["Orphan progress rows","SELECT p.user_id FROM progress p LEFT JOIN users u ON u.id = p.user_id WHERE u.id IS NULL","Left behind when a user is deleted, because foreign keys are off."],
+  ["Duplicate aliases","SELECT alias, COUNT(*) AS n FROM users GROUP BY alias HAVING COUNT(*) > 1","HAVING filters groups, while WHERE filters single rows."]]],
+ ["Schema and settings",[
+  ["Current config","SELECT key, value FROM config","The dials the game and admin panel share."],
+  ["Table definitions","SELECT name, sql FROM sqlite_master WHERE type = 'table'","sqlite_master is SQLite's own list of everything in the database."],
+  ["Store items","SELECT * FROM store_items","The shop price list seeded by init_db."]]]
+];
+const QS=HELP.flatMap(g=>g[1].map(it=>it[1]));
+const REF=[["SELECT","Pick which columns to show."],["FROM","Pick which table to read."],["WHERE","Keep only rows that match."],["JOIN","Combine two tables on a shared column."],["ORDER BY","Sort the rows (add DESC for biggest first)."],["GROUP BY","One result row per distinct value."],["LIMIT","Return at most this many rows."],["LIKE","Pattern match, % means any text."]];
+function useQ(i){
+  S.db.q=QS[i];render();
+  const ta=document.getElementById('sql');ta.focus();ta.setSelectionRange(ta.value.length,ta.value.length);
+  ta.scrollIntoView({block:'center'});
+}
+function helpPanel(){
+  let n=0;
+  const groups=HELP.map(([g,items])=>`<div class="hgroup">${esc(g)}</div><div class="hgrid">${items.map(it=>`<div class="hcard" onclick="useQ(${n++})"><b>${esc(it[0])}</b><p>${esc(it[2])}</p><code>${esc(it[1])}</code></div>`).join('')}</div>`).join('');
+  const ref=REF.map(r=>`<div class="hcard" style="cursor:default"><b>${r[0]}</b><p style="margin:0">${esc(r[1])}</p></div>`).join('');
+  return `<div class="panel"><div class="st">Query help</div><div class="m" style="font-size:12px">Click a card to load it into the SQL box. Every query here is read-only.</div>${groups}<div class="hgroup">Quick reference</div><div class="hgrid">${ref}</div></div>`}
+
+const KW='SELECT FROM WHERE JOIN LEFT INNER ON AND OR NOT IN LIKE BETWEEN IS NULL ORDER BY GROUP HAVING LIMIT OFFSET AS DISTINCT COUNT SUM AVG MIN MAX ASC DESC CASE WHEN THEN ELSE END WITH UNION'.split(' ');
+function candidates(text,pos){
+  const left=text.slice(0,pos),m=left.match(/([A-Za-z_]\w*\.)?([A-Za-z_]\w*)?$/);
+  if(!m||(!m[1]&&!m[2]))return{list:[],start:pos};
+  const owner=m[1]?m[1].slice(0,-1).toLowerCase():null,word=(m[2]||'').toLowerCase();
+  const sch=S.db.schema,tabs=Object.keys(sch),alias={};
+  // map aliases to tables from "FROM users u" / "JOIN progress AS p"
+  for(const a of text.matchAll(/\b(?:from|join)\s+(\w+)(?:\s+(?:as\s+)?(?!(?:where|join|left|inner|on|group|order|limit|having|union)\b)(\w+))?/gi)){
+    const t=tabs.find(x=>x.toLowerCase()===a[1].toLowerCase());
+    if(t){alias[a[1].toLowerCase()]=t;if(a[2])alias[a[2].toLowerCase()]=t}
+  }
+  let pool;
+  if(owner){const t=alias[owner]||tabs.find(x=>x.toLowerCase()===owner);pool=t?sch[t]:[]}
+  else{
+    const prev=(left.slice(0,left.length-m[0].length).trim().split(/\s+/).pop()||'').toLowerCase();
+    const cols=[...new Set(Object.values(sch).flat())];
+    pool=(prev==='from'||prev==='join')?[...tabs,...KW]:[...cols,...tabs,...KW];
+  }
+  const list=pool.filter(w=>w.toLowerCase().startsWith(word)&&w.toLowerCase()!==word).slice(0,8);
+  return{list,start:pos-(m[2]||'').length};
+}
+let sugList=[],sugIdx=0,sugStart=0;
+function showSug(ta){
+  const r=candidates(ta.value,ta.selectionStart);
+  sugList=r.list;sugStart=r.start;sugIdx=0;
+  const box=document.getElementById('sug');if(!box)return;
+  box.innerHTML=sugList.map((w,i)=>`<div class="sg ${i?'':'on'}" data-i="${i}">${esc(w)}</div>`).join('');
+  box.style.display=sugList.length?'block':'none';
+}
+function hideSug(){sugList=[];const b=document.getElementById('sug');if(b)b.style.display='none'}
+function pickSug(ta,i){
+  const w=sugList[i];if(w===undefined)return;
+  ta.value=ta.value.slice(0,sugStart)+w+ta.value.slice(ta.selectionStart);
+  ta.selectionStart=ta.selectionEnd=sugStart+w.length;
+  S.db.q=ta.value;hideSug();ta.focus();
+}
+async function loadSchema(){                // column names for every table, fetched once, used by suggestions
+  for(const t of S.db.tables){
+    if(S.db.schema[t.name])continue;
+    try{const r=await fetch(`/api/admin/db/table/${encodeURIComponent(t.name)}?limit=1`);if(r.ok)S.db.schema[t.name]=(await r.json()).columns}catch(e){}
+  }
+}
+// listeners sit on #view so they survive re-renders; typing never calls render() (that would drop focus)
+const V=document.getElementById('view');
+V.addEventListener('input',e=>{if(e.target.id==='sql'){S.db.q=e.target.value;showSug(e.target)}});
+V.addEventListener('focusout',e=>{if(e.target.id==='sql')hideSug()});
+V.addEventListener('mousedown',e=>{const g=e.target.closest('.sg');if(g){e.preventDefault();pickSug(document.getElementById('sql'),+g.dataset.i)}});
+V.addEventListener('keydown',e=>{
+  if(e.target.id!=='sql')return;
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();runSql();return}
+  if(!sugList.length)return;
+  if(e.key==='ArrowDown'||e.key==='ArrowUp'){
+    e.preventDefault();sugIdx=(sugIdx+(e.key==='ArrowDown'?1:-1)+sugList.length)%sugList.length;
+    [...document.getElementById('sug').children].forEach((c,i)=>c.classList.toggle('on',i===sugIdx));
+  }else if(e.key==='Tab'||e.key==='Enter'){e.preventDefault();pickSug(e.target,sugIdx)}
+  else if(e.key==='Escape')hideSug();
+});
 function dbview(){
-  const D=S.db,end=Math.min(D.offset+25,D.total),q=D.qres;
+  sugList=[];const D=S.db,end=Math.min(D.offset+25,D.total),q=D.qres;
   const chips=D.tables.map(t=>`<button class="chip ${t.name===D.sel?'on':''}" onclick="pick('${esc(t.name)}')">${esc(t.name)} (${t.rows})</button>`).join('');
   const head=D.cols.map(c=>`<th>${esc(c)}</th>`).join('')+'<th></th>';
   const body=D.rows.map(r=>`<tr>${D.cols.map(c=>`<td class="cell" data-r="${r.__rid}" data-c="${esc(c)}" title="Click to edit">${r[c]===null?'<span class="m">NULL</span>':esc(String(r[c]))}</td>`).join('')}<td><button class="btn-danger" onclick="delRow(${r.__rid})">Delete</button></td></tr>`).join('');
@@ -180,7 +279,7 @@ function dbview(){
   return `<div class="panel"><div class="st">Tables</div><div class="chips">${chips}</div>
   <div class="tw"><table><thead><tr>${head}</tr></thead><tbody>${body||'<tr><td colspan="99" class="empty">No rows in this table.</td></tr>'}</tbody></table></div>
   <div class="pager"><button onclick="page(-1)" ${D.offset?'':'disabled'}>Prev</button><span>${D.total?D.offset+1:0}-${end} of ${D.total}</span><button onclick="page(1)" ${end<D.total?'':'disabled'}>Next</button><span class="m">Click a cell to edit it.</span></div></div>
-  <div class="panel"><div class="st">Read-only SQL</div><textarea id="sql" placeholder="SELECT * FROM users LIMIT 10">${esc(D.q)}</textarea><button class="btn-save" onclick="runSql()">Run query</button>${qt}</div>`}
+  <div class="panel"><div class="st">Read-only SQL</div><div class="sqlbox"><textarea id="sql" placeholder="SELECT * FROM users LIMIT 10" spellcheck="false">${esc(D.q)}</textarea><div id="sug"></div></div><button class="btn-save" onclick="runSql()">Run query</button> <span class="m" style="font-size:12px">Ctrl+Enter runs it. Start typing for suggestions.</span>${qt}</div>${helpPanel()}`}
 function render(){
   document.getElementById('side').innerHTML=`<div class="brand">PIKSELPALS <span>ADMIN panel</span></div>
   <button class="nav ${S.tab==='dashboard'?'active':''}" onclick="go('dashboard')">Dashboard</button>
