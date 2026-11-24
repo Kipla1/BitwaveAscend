@@ -95,7 +95,11 @@ init_db()
 def hash_pw(pw: str) -> str:
     return hashlib.sha256(pw.encode()).hexdigest()
 
-class AuthPayload(BaseModel):
+class LoginPayload(BaseModel):
+    username: str
+    password: str
+
+class RegisterPayload(BaseModel):
     username: str
     password: str
     alias: str = "PixelHero"
@@ -107,43 +111,62 @@ class SyncPayload(BaseModel):
     unlocked_stage: int
     unlocked_chars: list[bool]
 
-@app.post("/api/auth")
-def login_or_register(data: AuthPayload):
-    with get_db() as db:
-        cfg = {r["key"]: r["value"] for r in db.execute("SELECT * FROM config").fetchall()}
-        if cfg.get("maintenance_mode") == "on":
-            raise HTTPException(status_code=503, detail="Server is currently under maintenance")
+def _load_config(db):
+    return {r["key"]: r["value"] for r in db.execute("SELECT * FROM config").fetchall()}
 
-        user = db.execute("SELECT * FROM users WHERE username = ?", (data.username,)).fetchone()
-        if not user:
-            min_len = int(cfg.get("min_password_length", 6))
-            if len(data.password) < min_len:
-                raise HTTPException(status_code=400, detail=f"Password must be at least {min_len} characters")
-            
+def _check_maintenance(cfg):
+    if cfg.get("maintenance_mode") == "on":
+        raise HTTPException(status_code=503, detail="Server is under maintenance")
+
+def _profile(db, user, cfg):
+    prog = db.execute("SELECT * FROM progress WHERE user_id = ?", (user["id"],)).fetchone()
+    return {
+        "username": user["username"],
+        "alias": user["alias"],
+        "coins": prog["coins"],
+        "high_score": prog["high_score"],
+        "unlocked_stage": prog["unlocked_stage"],
+        "unlocked_chars": json.loads(prog["unlocked_chars"]),
+        "config": cfg,
+    }
+
+@app.post("/api/register")
+def register(data: RegisterPayload):
+    username = data.username.strip()
+    alias = data.alias.strip() or "PixelHero"
+    if not username:
+        raise HTTPException(status_code=400, detail="Enter a username")
+    with get_db() as db:
+        cfg = _load_config(db)
+        _check_maintenance(cfg)
+        min_len = int(cfg.get("min_password_length", 6))
+        if len(data.password) < min_len:
+            raise HTTPException(status_code=400, detail=f"Password needs {min_len}+ characters")
+        try:
             cur = db.execute(
                 "INSERT INTO users (username, password_hash, alias) VALUES (?, ?, ?)",
-                (data.username, hash_pw(data.password), data.alias)
-            )
-            uid = cur.lastrowid
-            db.execute("INSERT INTO progress (user_id) VALUES (?)", (uid,))
-            db.commit()
-            user = db.execute("SELECT * FROM users WHERE id = ?", (uid,)).fetchone()
-        else:
-            if user["password_hash"] != hash_pw(data.password):
-                raise HTTPException(status_code=401, detail="Invalid password")
-            if user["is_banned"]:
-                raise HTTPException(status_code=403, detail="Account suspended")
+                (username, hash_pw(data.password), alias))
+        except sqlite3.IntegrityError:
+            raise HTTPException(status_code=409, detail="Username already taken")
+        db.execute("INSERT INTO progress (user_id) VALUES (?)", (cur.lastrowid,))
+        db.commit()
+        user = db.execute("SELECT * FROM users WHERE id = ?", (cur.lastrowid,)).fetchone()
+        return _profile(db, user, cfg)
 
-        prog = db.execute("SELECT * FROM progress WHERE user_id = ?", (user["id"],)).fetchone()
-        return {
-            "username": user["username"],
-            "alias": user["alias"],
-            "coins": prog["coins"],
-            "high_score": prog["high_score"],
-            "unlocked_stage": prog["unlocked_stage"],
-            "unlocked_chars": json.loads(prog["unlocked_chars"]),
-            "config": cfg
-        }
+@app.post("/api/login")
+def login(data: LoginPayload):
+    username = data.username.strip()
+    with get_db() as db:
+        cfg = _load_config(db)
+        _check_maintenance(cfg)
+        user = db.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
+        if not user:
+            raise HTTPException(status_code=404, detail="No account with that name")
+        if user["password_hash"] != hash_pw(data.password):
+            raise HTTPException(status_code=401, detail="Wrong password")
+        if user["is_banned"]:
+            raise HTTPException(status_code=403, detail="Account suspended")
+        return _profile(db, user, cfg)
 
 @app.post("/api/sync")
 def sync_progress(data: SyncPayload):

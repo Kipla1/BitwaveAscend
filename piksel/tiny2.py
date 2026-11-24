@@ -971,6 +971,8 @@ class Game:
         self.binding_key = None
         self.active_input_modal = None
         self.login_field = 0
+        self.auth_mode = 'login'      # 'login' or 'signup'
+        self.auth_msg = ""
         self.temp_user = ""
         self.temp_pass = ""
         self.temp_alias = ""
@@ -981,26 +983,53 @@ class Game:
         self.time_left, self.got, self.bonus = 180, 0, 0
         self.tick_acc = 0
 
-    def backend_login(self, username, password):
+    def _apply_profile(self, data):
+        self.username = data["username"]
+        self.alias = data["alias"]
+        self.coins = data["coins"]
+        self.score = max(self.score, data["high_score"])
+        self.unlocked = max(self.unlocked, data["unlocked_stage"])
+        self.unlocked_chars = data["unlocked_chars"]
+        self.logged_in = True
+
+    def _auth_request(self, path, payload):
+        """Returns (ok, message). The message is shown in the login box on failure."""
         try:
-            res = requests.post("http://127.0.0.1:8000/api/auth", json={
-                "username": username,
-                "password": password,
-                "alias": self.alias
-            }, timeout=3)
-            if res.status_code == 200:
-                data = res.json()
-                self.username = data["username"]
-                self.alias = data["alias"]
-                self.coins = data["coins"]
-                self.score = max(self.score, data["high_score"])
-                self.unlocked = max(self.unlocked, data["unlocked_stage"])
-                self.unlocked_chars = data["unlocked_chars"]
-                self.logged_in = True
-                return True
+            res = requests.post("http://127.0.0.1:8000" + path, json=payload, timeout=3)
         except requests.RequestException:
-            pass
-        return False
+            return False, "Server offline"
+        if res.status_code == 200:
+            self._apply_profile(res.json())
+            return True, ""
+        try:
+            detail = res.json().get("detail", "Something went wrong")
+        except ValueError:
+            detail = "Something went wrong"
+        if not isinstance(detail, str):
+            detail = "Check your details"
+        return False, detail
+
+    def backend_login(self, username, password):
+        return self._auth_request("/api/login", {"username": username, "password": password})
+
+    def backend_register(self, username, password):
+        return self._auth_request("/api/register", {"username": username, "password": password,
+                                                    "alias": self.alias})
+
+    def submit_auth(self):
+        if not self.temp_user or not self.temp_pass:
+            self.auth_msg = "Enter name and password"
+            self.audio.play('no')
+            return
+        fn = self.backend_register if self.auth_mode == 'signup' else self.backend_login
+        ok, msg = fn(self.temp_user, self.temp_pass)
+        if ok:
+            self.password = "•" * len(self.temp_pass)
+            self.active_input_modal = None
+            self.audio.play('ok')
+        else:
+            self.auth_msg = msg
+            self.audio.play('no')
 
     def async_sync_progress(self):
         """Syncs player progress in a background thread so the game never freezes"""
@@ -1092,24 +1121,20 @@ class Game:
                         self.active_input_modal = None
                         self.audio.play('no')
                     elif k == K_TAB or k == K_DOWN:
-                        self.login_field = (self.login_field + 1) % 3
+                        self.login_field = (self.login_field + 1) % 4
                         self.audio.play('move')
                     elif k == K_UP:
-                        self.login_field = (self.login_field - 1) % 3
+                        self.login_field = (self.login_field - 1) % 4
                         self.audio.play('move')
                     elif k == K_RETURN:
-                        if self.login_field == 2 or (self.temp_user and self.temp_pass):
-                            if self.temp_user:
-                                self.username = self.temp_user
-                                self.password = "•" * len(self.temp_pass)
-                                self.logged_in = True
-
-                                self.backend_login(self.temp_user, self.temp_pass)
-                                
-                            self.active_input_modal = None
-                            self.audio.play('ok')
+                        if self.login_field == 3:
+                            self.auth_mode = 'signup' if self.auth_mode == 'login' else 'login'
+                            self.auth_msg = ""
+                            self.audio.play('move')
+                        elif self.login_field == 2 or (self.temp_user and self.temp_pass):
+                            self.submit_auth()
                         else:
-                            self.login_field = (self.login_field + 1) % 3
+                            self.login_field = (self.login_field + 1) % 4
                     elif k == K_BACKSPACE:
                         if self.login_field == 0:
                             self.temp_user = self.temp_user[:-1]
@@ -1222,6 +1247,7 @@ class Game:
                     self.audio.play('move')
                 else:
                     self.temp_user, self.temp_pass, self.login_field = "", "", 0
+                    self.auth_mode, self.auth_msg = 'login', ""
                     self.active_input_modal = 'login_modal'
                     self.audio.play('ok')
             elif sel == 'alias':
@@ -1534,7 +1560,7 @@ class Game:
         if self.active_input_modal == 'login_modal':
             ov = pygame.Surface((W, H), pygame.SRCALPHA); ov.fill((0, 0, 0, 180)); c.blit(ov, (0, 0))
             pygame.draw.rect(c, (24, 16, 48), (40, 40, 176, 144)); pygame.draw.rect(c, COL['yellow'], (40, 40, 176, 144), 1)
-            draw_text(c, 'ACCOUNT LOGIN', W // 2, 48, COL['yellow'], 'm', 'center')
+            draw_text(c, 'ACCOUNT LOGIN' if self.auth_mode == 'login' else 'CREATE ACCOUNT', W // 2, 48, COL['yellow'], 'm', 'center')
             
             draw_text(c, 'USERNAME:', 50, 75, COL['white'])
             pygame.draw.rect(c, COL['ink'], (50, 88, 156, 16))
@@ -1547,8 +1573,16 @@ class Game:
             pass_mask = '•' * len(self.temp_pass)
             draw_text(c, pass_mask + ('_' if self.login_field == 1 and (self.t // 15 % 2) else ''), 54, 125, COL['cyan'], shadow=False)
             
+            if self.auth_msg:
+                draw_text(c, self.auth_msg.upper()[:30], W // 2, 142, COL['red'], 's', 'center')
+
             sub_col = COL['yellow'] if self.login_field == 2 else COL['grey']
-            draw_text(c, '[ LOGIN / SUBMIT ]', W // 2, 156, sub_col, 's', 'center')
+            sub_txt = '[ LOGIN ]' if self.auth_mode == 'login' else '[ CREATE ACCOUNT ]'
+            draw_text(c, sub_txt, W // 2, 156, sub_col, 's', 'center')
+
+            sw_col = COL['yellow'] if self.login_field == 3 else COL['grey']
+            sw_txt = 'NEW HERE? CREATE ACCOUNT' if self.auth_mode == 'login' else 'HAVE AN ACCOUNT? LOGIN'
+            draw_text(c, sw_txt, W // 2, 170, sw_col, 's', 'center')
 
         elif self.active_input_modal == 'alias_modal':
             ov = pygame.Surface((W, H), pygame.SRCALPHA); ov.fill((0, 0, 0, 180)); c.blit(ov, (0, 0))
